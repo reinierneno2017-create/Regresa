@@ -6,325 +6,43 @@
     <title>Regresa Holguín • Sistema en la Nube</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg: #f1f5f9;
-            --card: #ffffff;
-            --text: #0f172a;
-            --text-secondary: #475569;
-            --border: #e2e8f0;
-            --primary: #f59e0b;
-            --primary-dark: #d97706;
-            --primary-light: #fef3c7;
-            --danger: #ef4444;
-            --header-bg: #ffffff;
-            --shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-
-        body.dark {
-            --bg: #0a0a0a;
-            --card: #1a1a1a;
-            --text: #e5e5e5;
-            --text-secondary: #a3a3a3;
-            --border: #2a2a2a;
-            --primary: #f59e0b;
-            --primary-light: #2a1f0a;
-            --header-bg: #0f0f0f;
-        }
-
-        body {
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            padding: 20px;
-            transition: all 0.3s;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .auth-container {
-            background: var(--card);
-            border-radius: 32px;
-            padding: 32px;
-            max-width: 450px;
-            margin: 60px auto;
-            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.2);
-            border: 1px solid var(--border);
-        }
-
-        .auth-container h2 {
-            font-size: 1.8rem;
-            margin-bottom: 8px;
-            color: var(--primary);
-        }
-
-        .auth-container input {
-            width: 100%;
-            padding: 12px 16px;
-            margin: 12px 0;
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            font-size: 1rem;
-            background: var(--bg);
-            color: var(--text);
-        }
-
-        .auth-container button {
-            width: 100%;
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 40px;
-            font-weight: bold;
-            font-size: 1rem;
-            margin-top: 8px;
-            cursor: pointer;
-        }
-
-        .app-main {
-            display: none;
-        }
-
-        .user-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--header-bg);
-            padding: 12px 24px;
-            border-radius: 60px;
-            margin-bottom: 24px;
-            border: 1px solid var(--border);
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .user-info {
-            font-weight: bold;
-            color: var(--primary);
-        }
-
-        .dark-mode-toggle, .logout-btn {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            padding: 8px 16px;
-            border-radius: 40px;
-            cursor: pointer;
-        }
-
-        .logout-btn {
-            background: var(--danger);
-            color: white;
-            border: none;
-        }
-
-        .filter-bar {
-            background: var(--card);
-            border-radius: 60px;
-            padding: 8px 16px;
-            margin-bottom: 20px;
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            border: 1px solid var(--border);
-        }
-
-        .filter-bar select {
-            padding: 8px 12px;
-            border-radius: 40px;
-            border: 1px solid var(--border);
-            background: var(--bg);
-            color: var(--text);
-        }
-
-        .filter-bar button {
-            background: var(--primary);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 40px;
-            color: white;
-            cursor: pointer;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-            background: var(--card);
-            padding: 8px;
-            border-radius: 60px;
-            border: 1px solid var(--border);
-        }
-
-        .tab {
-            background: transparent;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 40px;
-            font-weight: 600;
-            cursor: pointer;
-            color: var(--text-secondary);
-        }
-
-        .tab.active {
-            background: var(--primary);
-            color: white;
-        }
-
-        .card {
-            background: var(--card);
-            border-radius: 28px;
-            padding: 24px;
-            margin-bottom: 24px;
-            border: 1px solid var(--border);
-        }
-
-        .card h3 {
-            margin-bottom: 20px;
-            color: var(--primary);
-        }
-
-        label {
-            font-weight: 600;
-            display: block;
-            margin-top: 14px;
-            margin-bottom: 5px;
-            font-size: 0.85rem;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            background: var(--bg);
-            color: var(--text);
-        }
-
-        button.primary {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 40px;
-            font-weight: bold;
-            margin-top: 20px;
-            width: 100%;
-            cursor: pointer;
-        }
-
-        .reporte-item {
-            background: var(--bg);
-            border-radius: 20px;
-            padding: 16px;
-            margin-bottom: 16px;
-            border-left: 5px solid var(--primary);
-        }
-
-        .badge {
-            display: inline-block;
-            background: var(--card);
-            padding: 4px 12px;
-            border-radius: 50px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            margin-right: 8px;
-            margin-bottom: 8px;
-            border: 1px solid var(--border);
-        }
-
-        .badge-municipio {
-            background: #10b981;
-            color: white;
-        }
-
-        .badge-persona {
-            background: #ef4444;
-            color: white;
-        }
-
-        .badge-recompensa {
-            background: var(--primary-light);
-            color: var(--primary-dark);
-        }
-
-        .actions {
-            margin-top: 12px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .actions button {
-            background: var(--card);
-            border: 1px solid var(--border);
-            padding: 6px 14px;
-            border-radius: 30px;
-            cursor: pointer;
-        }
-
-        .empty-message {
-            text-align: center;
-            padding: 40px;
-            color: var(--text-secondary);
-        }
-
-        .footer {
-            text-align: center;
-            padding: 24px;
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            border-top: 1px solid var(--border);
-            margin-top: 40px;
-        }
-
-        .refresh-floating {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            font-size: 24px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            z-index: 1000;
-        }
-
-        .donate-floating {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            font-size: 24px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            z-index: 1000;
-        }
-
-        @media (max-width: 650px) {
-            body { padding: 12px; }
-            .tab { padding: 6px 12px; font-size: 0.7rem; }
-            .refresh-floating, .donate-floating { width: 48px; height: 48px; font-size: 20px; }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --bg: #f1f5f9; --card: #ffffff; --text: #0f172a; --text-secondary: #475569; --border: #e2e8f0; --primary: #f59e0b; --primary-dark: #d97706; --primary-light: #fef3c7; --danger: #ef4444; --header-bg: #ffffff; --shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        body.dark { --bg: #0a0a0a; --card: #1a1a1a; --text: #e5e5e5; --text-secondary: #a3a3a3; --border: #2a2a2a; --primary: #f59e0b; --primary-light: #2a1f0a; --header-bg: #0f0f0f; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); padding: 20px; transition: all 0.3s; min-height: 100vh; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .auth-container { background: var(--card); border-radius: 32px; padding: 32px; max-width: 450px; margin: 60px auto; box-shadow: 0 20px 35px -12px rgba(0,0,0,0.2); border: 1px solid var(--border); }
+        .auth-container h2 { font-size: 1.8rem; margin-bottom: 8px; color: var(--primary); }
+        .auth-container input { width: 100%; padding: 12px 16px; margin: 12px 0; border: 1px solid var(--border); border-radius: 24px; font-size: 1rem; background: var(--bg); color: var(--text); }
+        .auth-container button { width: 100%; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 40px; font-weight: bold; font-size: 1rem; margin-top: 8px; cursor: pointer; }
+        .app-main { display: none; }
+        .user-header { display: flex; justify-content: space-between; align-items: center; background: var(--header-bg); padding: 12px 24px; border-radius: 60px; margin-bottom: 24px; border: 1px solid var(--border); flex-wrap: wrap; gap: 12px; }
+        .user-info { font-weight: bold; color: var(--primary); }
+        .dark-mode-toggle, .logout-btn { background: var(--bg); border: 1px solid var(--border); padding: 8px 16px; border-radius: 40px; cursor: pointer; }
+        .logout-btn { background: var(--danger); color: white; border: none; }
+        .filter-bar { background: var(--card); border-radius: 60px; padding: 8px 16px; margin-bottom: 20px; display: flex; gap: 12px; flex-wrap: wrap; border: 1px solid var(--border); }
+        .filter-bar select { padding: 8px 12px; border-radius: 40px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+        .filter-bar button { background: var(--primary); border: none; padding: 8px 16px; border-radius: 40px; color: white; cursor: pointer; }
+        .tabs { display: flex; gap: 6px; margin-bottom: 24px; flex-wrap: wrap; background: var(--card); padding: 8px; border-radius: 60px; border: 1px solid var(--border); }
+        .tab { background: transparent; border: none; padding: 10px 20px; border-radius: 40px; font-weight: 600; cursor: pointer; color: var(--text-secondary); }
+        .tab.active { background: var(--primary); color: white; }
+        .card { background: var(--card); border-radius: 28px; padding: 24px; margin-bottom: 24px; border: 1px solid var(--border); }
+        .card h3 { margin-bottom: 20px; color: var(--primary); }
+        label { font-weight: 600; display: block; margin-top: 14px; margin-bottom: 5px; font-size: 0.85rem; }
+        input, select, textarea { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 20px; background: var(--bg); color: var(--text); }
+        button.primary { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 40px; font-weight: bold; margin-top: 20px; width: 100%; cursor: pointer; }
+        .reporte-item { background: var(--bg); border-radius: 20px; padding: 16px; margin-bottom: 16px; border-left: 5px solid var(--primary); }
+        .badge { display: inline-block; background: var(--card); padding: 4px 12px; border-radius: 50px; font-size: 0.7rem; font-weight: bold; margin-right: 8px; margin-bottom: 8px; border: 1px solid var(--border); }
+        .badge-municipio { background: #10b981; color: white; }
+        .badge-persona { background: #ef4444; color: white; }
+        .badge-recompensa { background: var(--primary-light); color: var(--primary-dark); }
+        .actions { margin-top: 12px; display: flex; gap: 10px; flex-wrap: wrap; }
+        .actions button { background: var(--card); border: 1px solid var(--border); padding: 6px 14px; border-radius: 30px; cursor: pointer; }
+        .empty-message { text-align: center; padding: 40px; color: var(--text-secondary); }
+        .footer { text-align: center; padding: 24px; color: var(--text-secondary); font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 40px; }
+        .refresh-floating { position: fixed; bottom: 20px; left: 20px; background: var(--primary); color: white; border: none; width: 56px; height: 56px; border-radius: 50%; font-size: 24px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 1000; }
+        .donate-floating { position: fixed; bottom: 20px; right: 20px; background: var(--primary); color: white; border: none; width: 56px; height: 56px; border-radius: 50%; font-size: 24px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 1000; }
+        @media (max-width: 650px) { body { padding: 12px; } .tab { padding: 6px 12px; font-size: 0.7rem; } .refresh-floating, .donate-floating { width: 48px; height: 48px; font-size: 20px; } }
     </style>
 </head>
 <body>
@@ -411,62 +129,21 @@
                     <option value="hallazgo">🤲 Encontré algo</option>
                 </select>
                 <div id="formPerdida">
-                    <label>Tipo</label>
-                    <select id="tipoPerdida">
-                        <option value="objeto">Objeto</option>
-                        <option value="mascota">Mascota</option>
-                        <option value="persona">Persona</option>
-                    </select>
-                    <label>Descripción *</label>
-                    <textarea id="descPerdida" placeholder="Color, señas, nombre..."></textarea>
-                    <label>Municipio *</label>
-                    <select id="municipioPerdida">
-                        <option value="">Selecciona</option>
-                        <option value="Antilla">Antilla</option><option value="Báguanos">Báguanos</option>
-                        <option value="Banes">Banes</option><option value="Cacocum">Cacocum</option>
-                        <option value="Calixto García">Calixto García</option><option value="Cueto">Cueto</option>
-                        <option value="Frank País">Frank País</option><option value="Gibara">Gibara</option>
-                        <option value="Holguín">Holguín</option><option value="Mayarí">Mayarí</option>
-                        <option value="Moa">Moa</option><option value="Rafael Freyre">Rafael Freyre</option>
-                        <option value="Sagua de Tánamo">Sagua de Tánamo</option><option value="Urbano Noris">Urbano Noris</option>
-                    </select>
-                    <label>Lugar específico</label>
-                    <input type="text" id="lugarPerdida" placeholder="Ej: Parque Calixto García">
-                    <label>Teléfono *</label>
-                    <input type="tel" id="telefonoPerdida" placeholder="+53 5XXXXXXXX">
-                    <label>¿Ofreces recompensa?</label>
-                    <select id="recompensaSiNo"><option value="no">No</option><option value="si">Sí</option></select>
-                    <div id="camposRecompensa" style="display:none;">
-                        <input type="text" id="montoRecompensa" placeholder="Ej: 1000 CUP">
-                        <input type="text" id="condicionesRecompensa" placeholder="Condiciones">
-                    </div>
+                    <label>Tipo</label><select id="tipoPerdida"><option value="objeto">Objeto</option><option value="mascota">Mascota</option><option value="persona">Persona</option></select>
+                    <label>Descripción *</label><textarea id="descPerdida" placeholder="Color, señas, nombre..."></textarea>
+                    <label>Municipio *</label><select id="municipioPerdida"><option value="">Selecciona</option><option value="Antilla">Antilla</option><option value="Báguanos">Báguanos</option><option value="Banes">Banes</option><option value="Cacocum">Cacocum</option><option value="Calixto García">Calixto García</option><option value="Cueto">Cueto</option><option value="Frank País">Frank País</option><option value="Gibara">Gibara</option><option value="Holguín">Holguín</option><option value="Mayarí">Mayarí</option><option value="Moa">Moa</option><option value="Rafael Freyre">Rafael Freyre</option><option value="Sagua de Tánamo">Sagua de Tánamo</option><option value="Urbano Noris">Urbano Noris</option></select>
+                    <label>Lugar específico</label><input type="text" id="lugarPerdida" placeholder="Ej: Parque Calixto García">
+                    <label>Teléfono *</label><input type="tel" id="telefonoPerdida" placeholder="+53 5XXXXXXXX">
+                    <label>¿Ofreces recompensa?</label><select id="recompensaSiNo"><option value="no">No</option><option value="si">Sí</option></select>
+                    <div id="camposRecompensa" style="display:none;"><input type="text" id="montoRecompensa" placeholder="Ej: 1000 CUP"><input type="text" id="condicionesRecompensa" placeholder="Condiciones"></div>
                 </div>
                 <div id="formHallazgo" style="display:none;">
-                    <label>Tipo</label>
-                    <select id="tipoHallazgo">
-                        <option value="objeto">Objeto</option>
-                        <option value="mascota">Mascota</option>
-                        <option value="persona">Persona</option>
-                    </select>
-                    <label>Descripción *</label>
-                    <textarea id="descHallazgo" placeholder="Color, señas..."></textarea>
-                    <label>Municipio *</label>
-                    <select id="municipioHallazgo">
-                        <option value="">Selecciona</option>
-                        <option value="Antilla">Antilla</option><option value="Báguanos">Báguanos</option>
-                        <option value="Banes">Banes</option><option value="Cacocum">Cacocum</option>
-                        <option value="Calixto García">Calixto García</option><option value="Cueto">Cueto</option>
-                        <option value="Frank País">Frank País</option><option value="Gibara">Gibara</option>
-                        <option value="Holguín">Holguín</option><option value="Mayarí">Mayarí</option>
-                        <option value="Moa">Moa</option><option value="Rafael Freyre">Rafael Freyre</option>
-                        <option value="Sagua de Tánamo">Sagua de Tánamo</option><option value="Urbano Noris">Urbano Noris</option>
-                    </select>
-                    <label>Lugar específico</label>
-                    <input type="text" id="lugarHallazgo">
-                    <label>Tu teléfono *</label>
-                    <input type="tel" id="telefonoHallazgo" placeholder="+53 5XXXXXXXX">
-                    <label>¿Esperas recompensa?</label>
-                    <select id="esperaRecompensa"><option value="no">No</option><option value="si">Sí</option></select>
+                    <label>Tipo</label><select id="tipoHallazgo"><option value="objeto">Objeto</option><option value="mascota">Mascota</option><option value="persona">Persona</option></select>
+                    <label>Descripción *</label><textarea id="descHallazgo" placeholder="Color, señas..."></textarea>
+                    <label>Municipio *</label><select id="municipioHallazgo"><option value="">Selecciona</option><option value="Antilla">Antilla</option><option value="Báguanos">Báguanos</option><option value="Banes">Banes</option><option value="Cacocum">Cacocum</option><option value="Calixto García">Calixto García</option><option value="Cueto">Cueto</option><option value="Frank País">Frank País</option><option value="Gibara">Gibara</option><option value="Holguín">Holguín</option><option value="Mayarí">Mayarí</option><option value="Moa">Moa</option><option value="Rafael Freyre">Rafael Freyre</option><option value="Sagua de Tánamo">Sagua de Tánamo</option><option value="Urbano Noris">Urbano Noris</option></select>
+                    <label>Lugar específico</label><input type="text" id="lugarHallazgo">
+                    <label>Tu teléfono *</label><input type="tel" id="telefonoHallazgo" placeholder="+53 5XXXXXXXX">
+                    <label>¿Esperas recompensa?</label><select id="esperaRecompensa"><option value="no">No</option><option value="si">Sí</option></select>
                 </div>
                 <button id="btnEnviarReporte" class="primary">✅ Guardar</button>
             </div>
@@ -487,27 +164,20 @@
 <button id="donateBtn" class="donate-floating">❤️</button>
 
 <script>
-    // ========== SUPABASE CONFIG ==========
+    // ========== SUPABASE CONFIG (SOLO UNA VEZ) ==========
     const SUPABASE_URL = 'https://cpizvgfzyxsznsduinxf.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNwaXp2Z2Z6eXhzem5zZHVpbnhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NzE1MzgsImV4cCI6MjA5MzE0NzUzOH0.TpQcfNV1nqyeP7L8vL0mXQ5Uc87Qm0H1yjcQF2yviXI';
     
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     
-    // ========== VARIABLES GLOBALES ==========
+    // ========== RESTO DEL CÓDIGO ==========
     let currentUser = null;
     let currentTab = 'perdidas';
     let filtroActual = 'todos';
     let filtroHallazgosActual = 'todos';
     
-    // ========== FUNCIONES DE AUTENTICACIÓN ==========
     async function login(username, password) {
-        const { data, error } = await supabase
-            .from('usuarios')
-            .select('*')
-            .eq('username', username)
-            .eq('password', password)
-            .single();
-        
+        const { data, error } = await supabase.from('usuarios').select('*').eq('username', username).eq('password', password).single();
         if (error || !data) return false;
         currentUser = data;
         localStorage.setItem('regresa_user', JSON.stringify(currentUser));
@@ -515,133 +185,46 @@
     }
     
     async function register(username, password) {
-        const { data, error } = await supabase
-            .from('usuarios')
-            .insert([{ username, password, is_admin: false }])
-            .select();
-        
+        const { error } = await supabase.from('usuarios').insert([{ username, password, is_admin: false }]);
         if (error) return false;
         return true;
     }
     
-    // ========== FUNCIONES DE REPORTES ==========
-    async function addPerdida(perdida) {
-        const { error } = await supabase.from('perdidas').insert([perdida]);
-        if (error) console.error(error);
-        return !error;
-    }
-    
-    async function addHallazgo(hallazgo) {
-        const { error } = await supabase.from('hallazgos').insert([hallazgo]);
-        if (error) console.error(error);
-        return !error;
-    }
+    async function addPerdida(perdida) { const { error } = await supabase.from('perdidas').insert([perdida]); return !error; }
+    async function addHallazgo(hallazgo) { const { error } = await supabase.from('hallazgos').insert([hallazgo]); return !error; }
     
     async function getPerdidas() {
         let query = supabase.from('perdidas').select('*').eq('estado', 'activo');
-        if (filtroActual !== 'todos') {
-            query = query.eq('municipio', filtroActual);
-        }
-        const { data, error } = await query.order('fecha', { ascending: false });
-        if (error) return [];
+        if (filtroActual !== 'todos') query = query.eq('municipio', filtroActual);
+        const { data } = await query.order('fecha', { ascending: false });
         return data || [];
     }
     
     async function getHallazgos() {
         let query = supabase.from('hallazgos').select('*').eq('estado', 'activo');
-        if (filtroHallazgosActual !== 'todos') {
-            query = query.eq('municipio', filtroHallazgosActual);
-        }
-        const { data, error } = await query.order('fecha', { ascending: false });
-        if (error) return [];
+        if (filtroHallazgosActual !== 'todos') query = query.eq('municipio', filtroHallazgosActual);
+        const { data } = await query.order('fecha', { ascending: false });
         return data || [];
     }
     
-    async function getMisPerdidas() {
-        const { data, error } = await supabase
-            .from('perdidas')
-            .select('*')
-            .eq('owner', currentUser.username)
-            .order('fecha', { ascending: false });
-        if (error) return [];
-        return data || [];
-    }
+    async function getMisPerdidas() { const { data } = await supabase.from('perdidas').select('*').eq('owner', currentUser.username); return data || []; }
+    async function getMisHallazgos() { const { data } = await supabase.from('hallazgos').select('*').eq('owner', currentUser.username); return data || []; }
     
-    async function getMisHallazgos() {
-        const { data, error } = await supabase
-            .from('hallazgos')
-            .select('*')
-            .eq('owner', currentUser.username)
-            .order('fecha', { ascending: false });
-        if (error) return [];
-        return data || [];
-    }
+    async function marcarPerdidaResuelta(id) { await supabase.from('perdidas').update({ estado: 'resuelto' }).eq('id', id); renderAll(); }
+    async function marcarHallazgoResuelto(id) { await supabase.from('hallazgos').update({ estado: 'resuelto' }).eq('id', id); renderAll(); }
+    async function eliminarPerdida(id) { if (confirm('¿Eliminar?')) { await supabase.from('perdidas').delete().eq('id', id); renderAll(); } }
+    async function eliminarHallazgo(id) { if (confirm('¿Eliminar?')) { await supabase.from('hallazgos').delete().eq('id', id); renderAll(); } }
     
-    async function marcarPerdidaResuelta(id) {
-        await supabase.from('perdidas').update({ estado: 'resuelto' }).eq('id', id);
-        renderAll();
-    }
+    function generarId() { return Date.now() + '-' + Math.random().toString(36).substring(2, 8); }
     
-    async function marcarHallazgoResuelto(id) {
-        await supabase.from('hallazgos').update({ estado: 'resuelto' }).eq('id', id);
-        renderAll();
-    }
-    
-    async function eliminarPerdida(id) {
-        if (confirm('¿Eliminar permanentemente?')) {
-            await supabase.from('perdidas').delete().eq('id', id);
-            renderAll();
-        }
-    }
-    
-    async function eliminarHallazgo(id) {
-        if (confirm('¿Eliminar permanentemente?')) {
-            await supabase.from('hallazgos').delete().eq('id', id);
-            renderAll();
-        }
-    }
-    
-    async function adminEliminarPerdidaGlobal(owner, id) {
-        if (!currentUser?.is_admin) return;
-        if (confirm('Eliminar reporte de ' + owner + '?')) {
-            await supabase.from('perdidas').delete().eq('id', id);
-            renderAll();
-        }
-    }
-    
-    async function adminEliminarHallazgoGlobal(owner, id) {
-        if (!currentUser?.is_admin) return;
-        if (confirm('Eliminar reporte de ' + owner + '?')) {
-            await supabase.from('hallazgos').delete().eq('id', id);
-            renderAll();
-        }
-    }
-    
-    function generarId() {
-        return Date.now() + '-' + Math.random().toString(36).substring(2, 8);
-    }
-    
-    // ========== RENDERIZADO ==========
     async function renderPerdidas() {
         const container = document.getElementById('perdidasList');
         const perdidas = await getPerdidas();
-        if (perdidas.length === 0) {
-            container.innerHTML = '<div class="empty-message">🔴 No hay pérdidas activas</div>';
-            return;
-        }
+        if (perdidas.length === 0) { container.innerHTML = '<div class="empty-message">🔴 No hay pérdidas activas</div>'; return; }
         let html = '';
         perdidas.forEach(p => {
             const tipoLabel = p.tipo === 'persona' ? '🧑 Persona' : (p.tipo === 'mascota' ? '🐕 Mascota' : '📦 Objeto');
-            html += `<div class="reporte-item">
-                        <span class="badge ${p.tipo === 'persona' ? 'badge-persona' : ''}">${tipoLabel}</span>
-                        ${p.recompensa_ofrece ? '<span class="badge badge-recompensa">🎁 Recompensa</span>' : ''}
-                        <span class="badge badge-municipio">📍 ${p.municipio}</span>
-                        <p><strong>${p.descripcion.substring(0, 150)}</strong><br>📍 ${p.lugar || ''}<br>📞 ${p.telefono}<br>📅 ${new Date(p.fecha).toLocaleDateString()}</p>
-                        <div class="actions">
-                            <button onclick="alert('Teléfono: ${p.telefono}\\nUsuario: ${p.owner}')">📞 Contactar</button>
-                            ${currentUser?.is_admin ? `<button style="background:#ef4444;color:white;" onclick="adminEliminarPerdidaGlobal('${p.owner}', '${p.id}')">🗑️ Admin</button>` : ''}
-                        </div>
-                    </div>`;
+            html += `<div class="reporte-item"><span class="badge ${p.tipo === 'persona' ? 'badge-persona' : ''}">${tipoLabel}</span>${p.recompensa_ofrece ? '<span class="badge badge-recompensa">🎁 Recompensa</span>' : ''}<span class="badge badge-municipio">📍 ${p.municipio}</span><p><strong>${p.descripcion.substring(0, 150)}</strong><br>📍 ${p.lugar || ''}<br>📞 ${p.telefono}<br>📅 ${new Date(p.fecha).toLocaleDateString()}</p><div class="actions"><button onclick="alert('Teléfono: ${p.telefono}\\nUsuario: ${p.owner}')">📞 Contactar</button>${currentUser?.is_admin ? `<button style="background:#ef4444;color:white;" onclick="adminEliminarPerdidaGlobal('${p.owner}', '${p.id}')">🗑️ Admin</button>` : ''}</div></div>`;
         });
         container.innerHTML = html;
     }
@@ -649,23 +232,11 @@
     async function renderHallazgos() {
         const container = document.getElementById('hallazgosList');
         const hallazgos = await getHallazgos();
-        if (hallazgos.length === 0) {
-            container.innerHTML = '<div class="empty-message">🟢 No hay hallazgos activos</div>';
-            return;
-        }
+        if (hallazgos.length === 0) { container.innerHTML = '<div class="empty-message">🟢 No hay hallazgos activos</div>'; return; }
         let html = '';
         hallazgos.forEach(h => {
             const tipoLabel = h.tipo === 'persona' ? '🧑 Persona' : (h.tipo === 'mascota' ? '🐕 Mascota' : '🔍 Objeto');
-            html += `<div class="reporte-item">
-                        <span class="badge ${h.tipo === 'persona' ? 'badge-persona' : ''}">${tipoLabel}</span>
-                        <span class="badge">${h.espera_recompensa === 'si' ? '💰 Espera recompensa' : '❤️ Devuelve gratis'}</span>
-                        <span class="badge badge-municipio">📍 ${h.municipio}</span>
-                        <p><strong>${h.descripcion.substring(0, 150)}</strong><br>📍 ${h.lugar || ''}<br>📞 ${h.telefono}<br>📅 ${new Date(h.fecha).toLocaleDateString()}</p>
-                        <div class="actions">
-                            <button onclick="alert('Teléfono: ${h.telefono}\\nUsuario: ${h.owner}')">📞 Contactar</button>
-                            ${currentUser?.is_admin ? `<button style="background:#ef4444;color:white;" onclick="adminEliminarHallazgoGlobal('${h.owner}', '${h.id}')">🗑️ Admin</button>` : ''}
-                        </div>
-                    </div>`;
+            html += `<div class="reporte-item"><span class="badge ${h.tipo === 'persona' ? 'badge-persona' : ''}">${tipoLabel}</span><span class="badge">${h.espera_recompensa === 'si' ? '💰 Espera recompensa' : '❤️ Devuelve gratis'}</span><span class="badge badge-municipio">📍 ${h.municipio}</span><p><strong>${h.descripcion.substring(0, 150)}</strong><br>📍 ${h.lugar || ''}<br>📞 ${h.telefono}<br>📅 ${new Date(h.fecha).toLocaleDateString()}</p><div class="actions"><button onclick="alert('Teléfono: ${h.telefono}\\nUsuario: ${h.owner}')">📞 Contactar</button>${currentUser?.is_admin ? `<button style="background:#ef4444;color:white;" onclick="adminEliminarHallazgoGlobal('${h.owner}', '${h.id}')">🗑️ Admin</button>` : ''}</div></div>`;
         });
         container.innerHTML = html;
     }
@@ -673,53 +244,36 @@
     async function renderMisReportes() {
         const perdidas = await getMisPerdidas();
         const hallazgos = await getMisHallazgos();
-        
         const containerPerdidas = document.getElementById('misPerdidasList');
-        if (perdidas.length === 0) {
-            containerPerdidas.innerHTML = '<div class="empty-message">📭 No has reportado pérdidas</div>';
-        } else {
+        if (perdidas.length === 0) containerPerdidas.innerHTML = '<div class="empty-message">📭 No has reportado pérdidas</div>';
+        else {
             let html = '<h4>🔴 Activas</h4>';
-            perdidas.filter(p => p.estado === 'activo').forEach(p => {
-                html += `<div class="reporte-item"><p><strong>${p.descripcion}</strong><br>📍 ${p.municipio}<br>📞 ${p.telefono}</p><div class="actions"><button onclick="marcarPerdidaResuelta('${p.id}')">✅ Resuelto</button><button onclick="eliminarPerdida('${p.id}')" style="color:#ef4444;">🗑️</button></div></div>`;
-            });
+            perdidas.filter(p => p.estado === 'activo').forEach(p => { html += `<div class="reporte-item"><p><strong>${p.descripcion}</strong><br>📍 ${p.municipio}<br>📞 ${p.telefono}</p><div class="actions"><button onclick="marcarPerdidaResuelta('${p.id}')">✅ Resuelto</button><button onclick="eliminarPerdida('${p.id}')" style="color:#ef4444;">🗑️</button></div></div>`; });
             containerPerdidas.innerHTML = html;
         }
-        
         const containerHallazgos = document.getElementById('misHallazgosList');
-        if (hallazgos.length === 0) {
-            containerHallazgos.innerHTML = '<div class="empty-message">🔍 No has reportado hallazgos</div>';
-        } else {
+        if (hallazgos.length === 0) containerHallazgos.innerHTML = '<div class="empty-message">🔍 No has reportado hallazgos</div>';
+        else {
             let html = '<h4>🟢 Activos</h4>';
-            hallazgos.filter(h => h.estado === 'activo').forEach(h => {
-                html += `<div class="reporte-item"><p><strong>${h.descripcion}</strong><br>📍 ${h.municipio}<br>📞 ${h.telefono}</p><div class="actions"><button onclick="marcarHallazgoResuelto('${h.id}')">✅ Resuelto</button><button onclick="eliminarHallazgo('${h.id}')" style="color:#ef4444;">🗑️</button></div></div>`;
-            });
+            hallazgos.filter(h => h.estado === 'activo').forEach(h => { html += `<div class="reporte-item"><p><strong>${h.descripcion}</strong><br>📍 ${h.municipio}<br>📞 ${h.telefono}</p><div class="actions"><button onclick="marcarHallazgoResuelto('${h.id}')">✅ Resuelto</button><button onclick="eliminarHallazgo('${h.id}')" style="color:#ef4444;">🗑️</button></div></div>`; });
             containerHallazgos.innerHTML = html;
         }
     }
     
     async function renderMatches() {
         const misPerdidas = await getMisPerdidas();
-        const misHallazgos = await getMisHallazgos();
-        const todasPerdidas = await supabase.from('perdidas').select('*').eq('estado', 'activo').then(res => res.data || []);
         const todosHallazgos = await supabase.from('hallazgos').select('*').eq('estado', 'activo').then(res => res.data || []);
-        
         const matches = [];
         for (let perd of misPerdidas.filter(p => p.estado === 'activo')) {
             for (let hall of todosHallazgos.filter(h => h.owner !== currentUser.username)) {
-                if (perd.tipo === hall.tipo && perd.municipio === hall.municipio) {
-                    matches.push({ tipo: 'Pérdida vs Hallazgo', miItem: perd, otroItem: hall, otroOwner: hall.owner });
-                }
+                if (perd.tipo === hall.tipo && perd.municipio === hall.municipio) matches.push({ miItem: perd, otroItem: hall, otroOwner: hall.owner });
             }
         }
-        
         const container = document.getElementById('matchesList');
-        if (matches.length === 0) {
-            container.innerHTML = '<div class="empty-message">🤝 No hay coincidencias</div>';
-        } else {
+        if (matches.length === 0) container.innerHTML = '<div class="empty-message">🤝 No hay coincidencias</div>';
+        else {
             let html = '';
-            matches.slice(0, 10).forEach(m => {
-                html += `<div class="reporte-item"><span class="badge">🎯 Posible match</span><p><strong>Tú perdiste:</strong> ${m.miItem.descripcion}</p><p><strong>${m.otroOwner} encontró:</strong> ${m.otroItem.descripcion}</p><p>📍 Ambos en ${m.miItem.municipio}</p><div class="actions"><button onclick="alert('Teléfono de ${m.otroOwner}: ${m.otroItem.telefono}')">📞 Contactar</button></div></div>`;
-            });
+            matches.slice(0, 10).forEach(m => { html += `<div class="reporte-item"><span class="badge">🎯 Posible match</span><p><strong>Tú perdiste:</strong> ${m.miItem.descripcion}</p><p><strong>${m.otroOwner} encontró:</strong> ${m.otroItem.descripcion}</p><p>📍 Ambos en ${m.miItem.municipio}</p><div class="actions"><button onclick="alert('Teléfono de ${m.otroOwner}: ${m.otroItem.telefono}')">📞 Contactar</button></div></div>`; });
             container.innerHTML = html;
         }
     }
@@ -732,7 +286,6 @@
         else if (currentTab === 'matches') await renderMatches();
     }
     
-    // ========== EVENTOS ==========
     document.getElementById('btnLogin').onclick = async () => {
         const user = document.getElementById('loginUser').value.trim();
         const pass = document.getElementById('loginPass').value;
@@ -741,19 +294,14 @@
             document.getElementById('appMain').style.display = 'block';
             document.getElementById('currentUsername').innerText = currentUser.username + (currentUser.is_admin ? ' ⚡' : '');
             await renderAll();
-        } else {
-            alert('Usuario o contraseña incorrectos');
-        }
+        } else alert('Usuario o contraseña incorrectos');
     };
     
     document.getElementById('btnRegister').onclick = async () => {
         const user = document.getElementById('loginUser').value.trim();
         const pass = document.getElementById('loginPass').value;
-        if (await register(user, pass)) {
-            alert('Registrado. Ahora inicia sesión');
-        } else {
-            alert('Usuario ya existe');
-        }
+        if (await register(user, pass)) alert('Registrado. Ahora inicia sesión');
+        else alert('Usuario ya existe');
     };
     
     document.getElementById('logoutBtn').onclick = () => {
@@ -777,95 +325,40 @@
         };
     });
     
-    document.getElementById('aplicarFiltro').onclick = async () => {
-        filtroActual = document.getElementById('filtroMunicipio').value;
-        await renderPerdidas();
-    };
-    
-    document.getElementById('aplicarFiltroHallazgos').onclick = async () => {
-        filtroHallazgosActual = document.getElementById('filtroMunicipioHallazgos').value;
-        await renderHallazgos();
-    };
-    
-    document.getElementById('reportType').onchange = (e) => {
-        const isPerdida = e.target.value === 'perdida';
-        document.getElementById('formPerdida').style.display = isPerdida ? 'block' : 'none';
-        document.getElementById('formHallazgo').style.display = isPerdida ? 'none' : 'block';
-    };
-    
-    document.getElementById('recompensaSiNo').onchange = (e) => {
-        document.getElementById('camposRecompensa').style.display = e.target.value === 'si' ? 'block' : 'none';
-    };
+    document.getElementById('aplicarFiltro').onclick = async () => { filtroActual = document.getElementById('filtroMunicipio').value; await renderPerdidas(); };
+    document.getElementById('aplicarFiltroHallazgos').onclick = async () => { filtroHallazgosActual = document.getElementById('filtroMunicipioHallazgos').value; await renderHallazgos(); };
+    document.getElementById('reportType').onchange = (e) => { const isPerdida = e.target.value === 'perdida'; document.getElementById('formPerdida').style.display = isPerdida ? 'block' : 'none'; document.getElementById('formHallazgo').style.display = isPerdida ? 'none' : 'block'; };
+    document.getElementById('recompensaSiNo').onchange = (e) => { document.getElementById('camposRecompensa').style.display = e.target.value === 'si' ? 'block' : 'none'; };
     
     document.getElementById('btnEnviarReporte').onclick = async () => {
         const tipoReporte = document.getElementById('reportType').value;
         if (tipoReporte === 'perdida') {
-            const perdida = {
-                id: generarId(),
-                owner: currentUser.username,
-                tipo: document.getElementById('tipoPerdida').value,
-                descripcion: document.getElementById('descPerdida').value,
-                municipio: document.getElementById('municipioPerdida').value,
-                lugar: document.getElementById('lugarPerdida').value,
-                telefono: document.getElementById('telefonoPerdida').value,
-                recompensa_ofrece: document.getElementById('recompensaSiNo').value === 'si',
-                recompensa_monto: document.getElementById('montoRecompensa').value,
-                recompensa_condiciones: document.getElementById('condicionesRecompensa').value,
-                estado: 'activo'
-            };
-            if (!perdida.descripcion || !perdida.municipio || !perdida.telefono) {
-                alert('Complete campos obligatorios');
-                return;
-            }
-            if (await addPerdida(perdida)) {
-                alert('Pérdida registrada');
-                document.querySelector('.tab[data-tab="perdidas"]').click();
-            } else alert('Error al guardar');
+            const perdida = { id: generarId(), owner: currentUser.username, tipo: document.getElementById('tipoPerdida').value, descripcion: document.getElementById('descPerdida').value, municipio: document.getElementById('municipioPerdida').value, lugar: document.getElementById('lugarPerdida').value, telefono: document.getElementById('telefonoPerdida').value, recompensa_ofrece: document.getElementById('recompensaSiNo').value === 'si', recompensa_monto: document.getElementById('montoRecompensa').value, recompensa_condiciones: document.getElementById('condicionesRecompensa').value, estado: 'activo' };
+            if (!perdida.descripcion || !perdida.municipio || !perdida.telefono) { alert('Complete campos obligatorios'); return; }
+            if (await addPerdida(perdida)) { alert('Pérdida registrada'); document.querySelector('.tab[data-tab="perdidas"]').click(); }
+            else alert('Error');
         } else {
-            const hallazgo = {
-                id: generarId(),
-                owner: currentUser.username,
-                tipo: document.getElementById('tipoHallazgo').value,
-                descripcion: document.getElementById('descHallazgo').value,
-                municipio: document.getElementById('municipioHallazgo').value,
-                lugar: document.getElementById('lugarHallazgo').value,
-                telefono: document.getElementById('telefonoHallazgo').value,
-                espera_recompensa: document.getElementById('esperaRecompensa').value,
-                estado: 'activo'
-            };
-            if (!hallazgo.descripcion || !hallazgo.municipio || !hallazgo.telefono) {
-                alert('Complete campos obligatorios');
-                return;
-            }
-            if (await addHallazgo(hallazgo)) {
-                alert('Hallazgo registrado');
-                document.querySelector('.tab[data-tab="hallazgos"]').click();
-            } else alert('Error al guardar');
+            const hallazgo = { id: generarId(), owner: currentUser.username, tipo: document.getElementById('tipoHallazgo').value, descripcion: document.getElementById('descHallazgo').value, municipio: document.getElementById('municipioHallazgo').value, lugar: document.getElementById('lugarHallazgo').value, telefono: document.getElementById('telefonoHallazgo').value, espera_recompensa: document.getElementById('esperaRecompensa').value, estado: 'activo' };
+            if (!hallazgo.descripcion || !hallazgo.municipio || !hallazgo.telefono) { alert('Complete campos obligatorios'); return; }
+            if (await addHallazgo(hallazgo)) { alert('Hallazgo registrado'); document.querySelector('.tab[data-tab="hallazgos"]').click(); }
+            else alert('Error');
         }
     };
     
     document.getElementById('refreshBtn').onclick = () => window.location.reload();
+    document.getElementById('donateBtn').onclick = () => { navigator.clipboard.writeText('9204 1299 7573 6440'); alert('Tarjeta CUP copiada'); };
     
-    // Modo oscuro
     let dark = false;
-    document.getElementById('darkModeToggle').onclick = () => {
-        dark = !dark;
-        document.body.classList.toggle('dark', dark);
-        localStorage.setItem('darkMode', dark);
-        document.getElementById('darkModeToggle').innerHTML = dark ? '☀️' : '🌙';
-    };
-    if (localStorage.getItem('darkMode') === 'true') {
-        document.body.classList.add('dark');
-        document.getElementById('darkModeToggle').innerHTML = '☀️';
-    }
+    document.getElementById('darkModeToggle').onclick = () => { dark = !dark; document.body.classList.toggle('dark', dark); localStorage.setItem('darkMode', dark); document.getElementById('darkModeToggle').innerHTML = dark ? '☀️' : '🌙'; };
+    if (localStorage.getItem('darkMode') === 'true') { document.body.classList.add('dark'); document.getElementById('darkModeToggle').innerHTML = '☀️'; }
     
-    // Donación
-    document.getElementById('donateBtn').onclick = () => {
-        navigator.clipboard.writeText('9204 1299 7573 6440');
-        alert('Tarjeta CUP copiada: 9204 1299 7573 6440');
-    };
+    window.marcarPerdidaResuelta = marcarPerdidaResuelta;
+    window.marcarHallazgoResuelto = marcarHallazgoResuelto;
+    window.eliminarPerdida = eliminarPerdida;
+    window.eliminarHallazgo = eliminarHallazgo;
+    window.adminEliminarPerdidaGlobal = async (owner, id) => { if (currentUser?.is_admin && confirm('Eliminar?')) { await supabase.from('perdidas').delete().eq('id', id); renderAll(); } };
+    window.adminEliminarHallazgoGlobal = async (owner, id) => { if (currentUser?.is_admin && confirm('Eliminar?')) { await supabase.from('hallazgos').delete().eq('id', id); renderAll(); } };
     
-    // Auto-login si hay sesión guardada
     const savedUser = localStorage.getItem('regresa_user');
     if (savedUser) {
         currentUser = JSON.parse(savedUser);
@@ -876,13 +369,6 @@
             renderAll();
         }
     }
-    
-    window.marcarPerdidaResuelta = marcarPerdidaResuelta;
-    window.marcarHallazgoResuelto = marcarHallazgoResuelto;
-    window.eliminarPerdida = eliminarPerdida;
-    window.eliminarHallazgo = eliminarHallazgo;
-    window.adminEliminarPerdidaGlobal = adminEliminarPerdidaGlobal;
-    window.adminEliminarHallazgoGlobal = adminEliminarHallazgoGlobal;
 </script>
 </body>
 </html>
