@@ -1,28 +1,48 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Regresa Holguín</title>
+    <title>Regresa Holguín - Prueba</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-<h1>Regresa Holguín - Prueba</h1>
-<p id="mensaje">Cargando...</p>
+<h1>Regresa Holguín - Prueba de Conexión</h1>
+<p id="mensaje">Conectando a Supabase...</p>
 
 <script>
-// SOLO UNA VEZ - ESTE ES EL ÚNICO SCRIPT
+// Mostrar errores en la consola y en la página
+window.onerror = function(msg, url, line) {
+    document.getElementById('mensaje').innerHTML = '❌ ERROR: ' + msg + ' en línea ' + line;
+    return false;
+};
+
+// Inicializar Supabase
 const SUPABASE_URL = 'https://cpizvgfzyxsznsduinxf.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNwaXp2Z2Z6eXhzem5zZHVpbnhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NzE1MzgsImV4cCI6MjA5MzE0NzUzOH0.TpQcfNV1nqyeP7L8vL0mXQ5Uc87Qm0H1yjcQF2yviXI';
+
+document.getElementById('mensaje').innerHTML = '📡 Creando cliente Supabase...';
+
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-async function probar() {
-    const { data, error } = await supabase.from('usuarios').select('count');
-    if (error) {
-        document.getElementById('mensaje').innerHTML = '❌ Error de conexión: ' + error.message;
-    } else {
-        document.getElementById('mensaje').innerHTML = '✅ Supabase conectado correctamente';
+document.getElementById('mensaje').innerHTML = '📡 Cliente creado. Probando conexión...';
+
+async function probarConexion() {
+    try {
+        document.getElementById('mensaje').innerHTML = '📡 Consultando tabla usuarios...';
+        const { data, error, status } = await supabase.from('usuarios').select('*', { count: 'exact', head: true });
+        
+        if (error) {
+            document.getElementById('mensaje').innerHTML = '❌ ERROR: ' + error.message + '<br>Código: ' + error.code;
+            console.error('Error detallado:', error);
+        } else {
+            document.getElementById('mensaje').innerHTML = '✅ ¡Supabase conectado correctamente!<br>La tabla usuarios existe y es accesible.';
+        }
+    } catch (err) {
+        document.getElementById('mensaje').innerHTML = '❌ EXCEPCIÓN: ' + err.message;
+        console.error('Excepción:', err);
     }
 }
-probar();
+
+probarConexion();
 </script>
 </body>
 </html>
