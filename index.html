@@ -170,12 +170,13 @@
     
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     
-    // ========== RESTO DEL CÓDIGO ==========
+    // ========== VARIABLES ==========
     let currentUser = null;
     let currentTab = 'perdidas';
     let filtroActual = 'todos';
     let filtroHallazgosActual = 'todos';
     
+    // ========== FUNCIONES ==========
     async function login(username, password) {
         const { data, error } = await supabase.from('usuarios').select('*').eq('username', username).eq('password', password).single();
         if (error || !data) return false;
@@ -186,8 +187,7 @@
     
     async function register(username, password) {
         const { error } = await supabase.from('usuarios').insert([{ username, password, is_admin: false }]);
-        if (error) return false;
-        return true;
+        return !error;
     }
     
     async function addPerdida(perdida) { const { error } = await supabase.from('perdidas').insert([perdida]); return !error; }
@@ -286,6 +286,7 @@
         else if (currentTab === 'matches') await renderMatches();
     }
     
+    // ========== EVENTOS ==========
     document.getElementById('btnLogin').onclick = async () => {
         const user = document.getElementById('loginUser').value.trim();
         const pass = document.getElementById('loginPass').value;
@@ -356,8 +357,8 @@
     window.marcarHallazgoResuelto = marcarHallazgoResuelto;
     window.eliminarPerdida = eliminarPerdida;
     window.eliminarHallazgo = eliminarHallazgo;
-    window.adminEliminarPerdidaGlobal = async (owner, id) => { if (currentUser?.is_admin && confirm('Eliminar?')) { await supabase.from('perdidas').delete().eq('id', id); renderAll(); } };
-    window.adminEliminarHallazgoGlobal = async (owner, id) => { if (currentUser?.is_admin && confirm('Eliminar?')) { await supabase.from('hallazgos').delete().eq('id', id); renderAll(); } };
+    window.adminEliminarPerdidaGlobal = async (owner, id) => { if (currentUser?.is_admin && confirm('Eliminar reporte?')) { await supabase.from('perdidas').delete().eq('id', id); renderAll(); } };
+    window.adminEliminarHallazgoGlobal = async (owner, id) => { if (currentUser?.is_admin && confirm('Eliminar reporte?')) { await supabase.from('hallazgos').delete().eq('id', id); renderAll(); } };
     
     const savedUser = localStorage.getItem('regresa_user');
     if (savedUser) {
