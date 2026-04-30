@@ -28,7 +28,6 @@
         .footer{text-align:center;padding:24px;color:#475569;font-size:0.8rem;border-top:1px solid #e2e8f0;margin-top:40px}
         .refresh-floating{position:fixed;bottom:20px;left:20px;background:#f59e0b;width:56px;height:56px;border-radius:50%;border:none;font-size:24px;cursor:pointer}
         .donate-floating{position:fixed;bottom:20px;right:20px;background:#f59e0b;width:56px;height:56px;border-radius:50%;border:none;font-size:24px;cursor:pointer}
-        @media(max-width:650px){body{padding:12px}}
     </style>
 </head>
 <body>
@@ -88,7 +87,6 @@
 <button id="donateBtn" class="donate-floating">❤️</button>
 
 <script>
-// ========== SUPABASE - SOLO UNA VEZ ==========
 const SUPABASE_URL = 'https://cpizvgfzyxsznsduinxf.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNwaXp2Z2Z6eXhzem5zZHVpbnhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NzE1MzgsImV4cCI6MjA5MzE0NzUzOH0.TpQcfNV1nqyeP7L8vL0mXQ5Uc87Qm0H1yjcQF2yviXI';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -141,7 +139,7 @@ function generarId() { return Date.now() + '-' + Math.random().toString(36).subs
 async function renderPerdidas() {
     const container = document.getElementById('perdidasList');
     const perdidas = await getPerdidas();
-    if (perdidas.length === 0) { container.innerHTML = '<div class="empty-message">🔴 No hay pérdidas activas</div>'; return; }
+    if (perdidas.length === 0) { container.innerHTML = '<div class="empty-message" style="text-align:center;padding:40px">🔴 No hay pérdidas activas</div>'; return; }
     let html = '';
     perdidas.forEach(p => {
         const tipoLabel = p.tipo === 'persona' ? '🧑 Persona' : (p.tipo === 'mascota' ? '🐕 Mascota' : '📦 Objeto');
@@ -153,7 +151,7 @@ async function renderPerdidas() {
 async function renderHallazgos() {
     const container = document.getElementById('hallazgosList');
     const hallazgos = await getHallazgos();
-    if (hallazgos.length === 0) { container.innerHTML = '<div class="empty-message">🟢 No hay hallazgos activos</div>'; return; }
+    if (hallazgos.length === 0) { container.innerHTML = '<div class="empty-message" style="text-align:center;padding:40px">🟢 No hay hallazgos activos</div>'; return; }
     let html = '';
     hallazgos.forEach(h => {
         const tipoLabel = h.tipo === 'persona' ? '🧑 Persona' : (h.tipo === 'mascota' ? '🐕 Mascota' : '🔍 Objeto');
@@ -166,14 +164,14 @@ async function renderMisReportes() {
     const perdidas = await getMisPerdidas();
     const hallazgos = await getMisHallazgos();
     const containerPerdidas = document.getElementById('misPerdidasList');
-    if (perdidas.length === 0) containerPerdidas.innerHTML = '<div class="empty-message">📭 No has reportado pérdidas</div>';
+    if (perdidas.length === 0) containerPerdidas.innerHTML = '<div class="empty-message" style="text-align:center;padding:40px">📭 No has reportado pérdidas</div>';
     else {
         let html = '<h4>🔴 Activas</h4>';
         perdidas.filter(p => p.estado === 'activo').forEach(p => { html += `<div class="reporte-item"><p><strong>${p.descripcion}</strong><br>📍 ${p.municipio}<br>📞 ${p.telefono}</p><div class="actions"><button onclick="marcarPerdidaResuelta('${p.id}')">✅ Resuelto</button><button onclick="eliminarPerdida('${p.id}')" style="color:#ef4444;">🗑️</button></div></div>`; });
         containerPerdidas.innerHTML = html;
     }
     const containerHallazgos = document.getElementById('misHallazgosList');
-    if (hallazgos.length === 0) containerHallazgos.innerHTML = '<div class="empty-message">🔍 No has reportado hallazgos</div>';
+    if (hallazgos.length === 0) containerHallazgos.innerHTML = '<div class="empty-message" style="text-align:center;padding:40px">🔍 No has reportado hallazgos</div>';
     else {
         let html = '<h4>🟢 Activos</h4>';
         hallazgos.filter(h => h.estado === 'activo').forEach(h => { html += `<div class="reporte-item"><p><strong>${h.descripcion}</strong><br>📍 ${h.municipio}<br>📞 ${h.telefono}</p><div class="actions"><button onclick="marcarHallazgoResuelto('${h.id}')">✅ Resuelto</button><button onclick="eliminarHallazgo('${h.id}')" style="color:#ef4444;">🗑️</button></div></div>`; });
@@ -191,7 +189,7 @@ async function renderMatches() {
         }
     }
     const container = document.getElementById('matchesList');
-    if (matches.length === 0) container.innerHTML = '<div class="empty-message">🤝 No hay coincidencias</div>';
+    if (matches.length === 0) container.innerHTML = '<div class="empty-message" style="text-align:center;padding:40px">🤝 No hay coincidencias</div>';
     else {
         let html = '';
         matches.slice(0, 10).forEach(m => { html += `<div class="reporte-item"><span class="badge">🎯 Posible match</span><p><strong>Tú perdiste:</strong> ${m.miItem.descripcion}</p><p><strong>${m.otroOwner} encontró:</strong> ${m.otroItem.descripcion}</p><p>📍 Ambos en ${m.miItem.municipio}</p><div class="actions"><button onclick="alert('Teléfono de ${m.otroOwner}: ${m.otroItem.telefono}')">📞 Contactar</button></div></div>`; });
@@ -207,7 +205,6 @@ async function renderAll() {
     else if (currentTab === 'matches') await renderMatches();
 }
 
-// ========== EVENTOS ==========
 document.getElementById('btnLogin').onclick = async () => {
     const user = document.getElementById('loginUser').value.trim();
     const pass = document.getElementById('loginPass').value;
@@ -247,8 +244,6 @@ document.querySelectorAll('.tab').forEach(tab => {
     };
 });
 
-document.getElementById('aplicarFiltro').onclick = async () => { filtroActual = document.getElementById('filtroMunicipio').value; await renderPerdidas(); };
-document.getElementById('aplicarFiltroHallazgos').onclick = async () => { filtroHallazgosActual = document.getElementById('filtroMunicipioHallazgos').value; await renderHallazgos(); };
 document.getElementById('reportType').onchange = (e) => { const isPerdida = e.target.value === 'perdida'; document.getElementById('formPerdida').style.display = isPerdida ? 'block' : 'none'; document.getElementById('formHallazgo').style.display = isPerdida ? 'none' : 'block'; };
 document.getElementById('recompensaSiNo').onchange = (e) => { document.getElementById('camposRecompensa').style.display = e.target.value === 'si' ? 'block' : 'none'; };
 
