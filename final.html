@@ -56,7 +56,6 @@
             margin: 0 auto;
         }
 
-        /* Login */
         .auth-container {
             background: var(--card);
             border-radius: 32px;
@@ -96,14 +95,17 @@
             font-size: 1rem;
             margin-top: 8px;
             cursor: pointer;
+            transition: transform 0.2s;
         }
 
-        /* App principal */
+        .auth-container button:hover {
+            transform: scale(1.01);
+        }
+
         .app-main {
             display: none;
         }
 
-        /* Header */
         .user-header {
             display: flex;
             justify-content: space-between;
@@ -112,7 +114,10 @@
             padding: 12px 20px;
             border-radius: 60px;
             margin-bottom: 20px;
+            box-shadow: var(--shadow);
             border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
         .dark-mode-toggle {
@@ -134,7 +139,6 @@
             font-weight: bold;
         }
 
-        /* Filtros */
         .filter-bar {
             background: var(--card);
             border-radius: 60px;
@@ -164,7 +168,6 @@
             cursor: pointer;
         }
 
-        /* Pestañas */
         .tabs {
             display: flex;
             gap: 6px;
@@ -183,8 +186,8 @@
             border-radius: 40px;
             font-weight: 600;
             cursor: pointer;
-            font-size: 0.85rem;
             color: var(--text-secondary);
+            font-size: 0.85rem;
         }
 
         .tab.active {
@@ -192,7 +195,6 @@
             color: white;
         }
 
-        /* Tarjetas */
         .card {
             background: var(--card);
             border-radius: 28px;
@@ -213,6 +215,12 @@
             margin-top: 12px;
             margin-bottom: 5px;
             font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        label.required::after {
+            content: " *";
+            color: var(--danger);
         }
 
         input, select, textarea {
@@ -243,13 +251,11 @@
             padding: 14px;
             margin-bottom: 14px;
             border-left: 5px solid var(--border);
-            transition: all 0.2s;
         }
 
         .reporte-item.destacado {
             background: var(--destacado);
             border-left: 5px solid var(--destacado-border);
-            box-shadow: 0 2px 8px rgba(245,158,11,0.2);
         }
 
         .badge {
@@ -284,8 +290,8 @@
             color: white;
         }
 
-        .badge-admin {
-            background: #8b5cf6;
+        .badge-owner {
+            background: #3b82f6;
             color: white;
         }
 
@@ -358,7 +364,6 @@
             z-index: 1000;
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -388,11 +393,6 @@
             margin-bottom: 16px;
         }
 
-        .modal-content button {
-            margin-top: 16px;
-            margin-right: 10px;
-        }
-
         .terminos-texto {
             font-size: 0.8rem;
             line-height: 1.4;
@@ -400,6 +400,36 @@
             max-height: 300px;
             overflow-y: auto;
             padding-right: 10px;
+        }
+
+        .donacion-info {
+            background: var(--primary-light);
+            padding: 12px;
+            border-radius: 20px;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .donacion-info code {
+            font-size: 1rem;
+            font-weight: bold;
+            background: var(--card);
+            padding: 8px;
+            display: inline-block;
+            border-radius: 12px;
+            margin: 5px 0;
+            user-select: all;
+        }
+
+        .btn-copiar {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            margin-top: 10px;
+            cursor: pointer;
+            font-size: 0.8rem;
         }
 
         @media (max-width: 650px) {
@@ -412,24 +442,19 @@
 <body>
 
 <div class="container">
-    <!-- Login -->
     <div id="authPanel" class="auth-container">
         <h2>🔐 REGRESA HOLGUÍN</h2>
-        <p style="text-align:center; margin-bottom:16px; font-size:0.8rem;">Objetos, mascotas y personas extraviadas</p>
+        <p style="text-align:center; margin-bottom:16px; font-size:0.8rem;">Objetos, mascotas y personas extraviadas<br>📍 Provincia Holguín, Cuba</p>
         <input type="text" id="loginUser" placeholder="Usuario">
         <input type="password" id="loginPass" placeholder="Contraseña">
         <button id="btnLogin">Iniciar sesión</button>
         <button id="btnRegister" style="background:#3b82f6; margin-top: 10px;">Registrarme</button>
     </div>
 
-    <!-- App principal -->
     <div id="appMain" class="app-main">
         <div class="user-header">
-            <div>👤 <span id="currentUsername"></span></div>
-            <div>
-                <button id="darkModeToggle" class="dark-mode-toggle">🌙</button>
-                <button id="logoutBtn" class="logout-btn">Salir</button>
-            </div>
+            <div>👤 <span id="currentUsername" class="user-info"></span></div>
+            <div><button id="darkModeToggle" class="dark-mode-toggle">🌙</button><button id="logoutBtn" class="logout-btn">Salir</button></div>
         </div>
 
         <div class="tabs">
@@ -441,113 +466,42 @@
             <button id="adminTab" class="tab" data-tab="admin" style="display:none;">👑 Admin</button>
         </div>
 
-        <!-- Pérdidas -->
-        <div id="tabPerdidas">
-            <div class="card">
-                <h3>⚠️ Pérdidas en Holguín</h3>
-                <div class="filter-bar">
-                    <label>📍 Filtrar:</label>
-                    <select id="filtroMunicipioPerdidas">
-                        <option value="todos">Todos</option>
-                        <option value="Antilla">Antilla</option><option value="Báguanos">Báguanos</option>
-                        <option value="Banes">Banes</option><option value="Cacocum">Cacocum</option>
-                        <option value="Calixto García">Calixto García</option><option value="Cueto">Cueto</option>
-                        <option value="Frank País">Frank País</option><option value="Gibara">Gibara</option>
-                        <option value="Holguín">Holguín</option><option value="Mayarí">Mayarí</option>
-                        <option value="Moa">Moa</option><option value="Rafael Freyre">Rafael Freyre</option>
-                        <option value="Sagua de Tánamo">Sagua de Tánamo</option><option value="Urbano Noris">Urbano Noris</option>
-                    </select>
-                    <button id="aplicarFiltroPerdidas">🔍 Filtrar</button>
-                </div>
-                <div id="perdidasList"></div>
-            </div>
-        </div>
-
-        <!-- Hallazgos -->
-        <div id="tabHallazgos" style="display:none">
-            <div class="card">
-                <h3>🔍 Hallazgos en Holguín</h3>
-                <div class="filter-bar">
-                    <label>📍 Filtrar:</label>
-                    <select id="filtroMunicipioHallazgos">
-                        <option value="todos">Todos</option>
-                        <option value="Antilla">Antilla</option><option value="Báguanos">Báguanos</option>
-                        <option value="Banes">Banes</option><option value="Cacocum">Cacocum</option>
-                        <option value="Calixto García">Calixto García</option><option value="Cueto">Cueto</option>
-                        <option value="Frank País">Frank País</option><option value="Gibara">Gibara</option>
-                        <option value="Holguín">Holguín</option><option value="Mayarí">Mayarí</option>
-                        <option value="Moa">Moa</option><option value="Rafael Freyre">Rafael Freyre</option>
-                        <option value="Sagua de Tánamo">Sagua de Tánamo</option><option value="Urbano Noris">Urbano Noris</option>
-                    </select>
-                    <button id="aplicarFiltroHallazgos">🔍 Filtrar</button>
-                </div>
-                <div id="hallazgosList"></div>
-            </div>
-        </div>
-
-        <!-- Mis reportes -->
-        <div id="tabMisReportes" style="display:none">
-            <div class="card"><h3>📦 Mis pérdidas</h3><div id="misPerdidasList"></div></div>
-            <div class="card"><h3>🤲 Mis hallazgos</h3><div id="misHallazgosList"></div></div>
-        </div>
-
-        <!-- Reportar -->
+        <div id="tabPerdidas"><div class="card"><h3>⚠️ Pérdidas en Holguín</h3><div class="filter-bar"><label>📍 Filtrar:</label><select id="filtroMunicipioPerdidas"><option value="todos">Todos</option><option value="Antilla">Antilla</option><option value="Báguanos">Báguanos</option><option value="Banes">Banes</option><option value="Cacocum">Cacocum</option><option value="Calixto García">Calixto García</option><option value="Cueto">Cueto</option><option value="Frank País">Frank País</option><option value="Gibara">Gibara</option><option value="Holguín">Holguín</option><option value="Mayarí">Mayarí</option><option value="Moa">Moa</option><option value="Rafael Freyre">Rafael Freyre</option><option value="Sagua de Tánamo">Sagua de Tánamo</option><option value="Urbano Noris">Urbano Noris</option></select><button id="aplicarFiltroPerdidas">🔍 Filtrar</button></div><div id="perdidasList"></div></div></div>
+        <div id="tabHallazgos" style="display:none"><div class="card"><h3>🔍 Hallazgos en Holguín</h3><div class="filter-bar"><label>📍 Filtrar:</label><select id="filtroMunicipioHallazgos"><option value="todos">Todos</option><option value="Antilla">Antilla</option><option value="Báguanos">Báguanos</option><option value="Banes">Banes</option><option value="Cacocum">Cacocum</option><option value="Calixto García">Calixto García</option><option value="Cueto">Cueto</option><option value="Frank País">Frank País</option><option value="Gibara">Gibara</option><option value="Holguín">Holguín</option><option value="Mayarí">Mayarí</option><option value="Moa">Moa</option><option value="Rafael Freyre">Rafael Freyre</option><option value="Sagua de Tánamo">Sagua de Tánamo</option><option value="Urbano Noris">Urbano Noris</option></select><button id="aplicarFiltroHallazgos">🔍 Filtrar</button></div><div id="hallazgosList"></div></div></div>
+        <div id="tabMisReportes" style="display:none"><div class="card"><h3>📦 Mis pérdidas</h3><div id="misPerdidasList"></div></div><div class="card"><h3>🤲 Mis hallazgos</h3><div id="misHallazgosList"></div></div></div>
         <div id="tabReportar" style="display:none">
             <div class="card">
                 <h3>📝 Nuevo reporte</h3>
-                <select id="reportType">
-                    <option value="perdida">📌 Perdí algo</option>
-                    <option value="hallazgo">🤲 Encontré algo</option>
-                </select>
+                <select id="reportType"><option value="perdida">📌 Perdí algo</option><option value="hallazgo">🤲 Encontré algo</option></select>
                 <div id="formPerdida">
-                    <label>Tipo</label><select id="tipoPerdida"><option value="objeto">Objeto</option><option value="mascota">Mascota</option><option value="persona">Persona</option></select>
-                    <label>Descripción *</label><textarea id="descPerdida" placeholder="Color, señas, nombre..."></textarea>
-                    <label>Municipio *</label><select id="municipioPerdida"><option value="">Selecciona</option>
-                        <option value="Antilla">Antilla</option><option value="Holguín">Holguín</option>
-                        <option value="Gibara">Gibara</option><option value="Moa">Moa</option><option value="Banes">Banes</option>
-                    </select>
-                    <label>Teléfono *</label><input type="tel" id="telefonoPerdida" placeholder="+53 5XXXXXXXX">
-                    <label>¿Recompensa?</label><select id="recompensaSiNo"><option value="no">No</option><option value="si">Sí</option></select>
-                    <div id="camposRecompensa" style="display:none"><input type="text" id="montoRecompensa" placeholder="Ej: 1000 CUP"></div>
+                    <label class="required">Tipo</label><select id="tipoPerdida"><option value="objeto">Objeto</option><option value="mascota">Mascota</option><option value="persona">Persona</option></select>
+                    <label class="required">Descripción detallada</label><textarea id="descPerdida" placeholder="Color, marca, señas, nombre..."></textarea>
+                    <label class="required">Municipio</label><select id="municipioPerdida"><option value="">Selecciona</option><option value="Antilla">Antilla</option><option value="Báguanos">Báguanos</option><option value="Banes">Banes</option><option value="Cacocum">Cacocum</option><option value="Calixto García">Calixto García</option><option value="Cueto">Cueto</option><option value="Frank País">Frank País</option><option value="Gibara">Gibara</option><option value="Holguín">Holguín</option><option value="Mayarí">Mayarí</option><option value="Moa">Moa</option><option value="Rafael Freyre">Rafael Freyre</option><option value="Sagua de Tánamo">Sagua de Tánamo</option><option value="Urbano Noris">Urbano Noris</option></select>
+                    <label class="required">Dirección o punto de referencia cercano</label>
+                    <input type="text" id="direccionPerdida" placeholder="Ej: Calle Libertad #123, cerca del parque, frente a la escuela...">
+                    <label class="required">Teléfono de contacto</label><input type="tel" id="telefonoPerdida" placeholder="+53 5XXXXXXXX">
+                    <label>¿Ofreces recompensa?</label><select id="recompensaSiNo"><option value="no">No</option><option value="si">Sí</option></select>
+                    <div id="camposRecompensa" style="display:none;"><input type="text" id="montoRecompensa" placeholder="Ej: 1000 CUP"><input type="text" id="condicionesRecompensa" placeholder="Condiciones (opcional)"></div>
                 </div>
                 <div id="formHallazgo" style="display:none">
-                    <label>Tipo</label><select id="tipoHallazgo"><option value="objeto">Objeto</option><option value="mascota">Mascota</option><option value="persona">Persona</option></select>
-                    <label>Descripción *</label><textarea id="descHallazgo" placeholder="Color, señas..."></textarea>
-                    <label>Municipio *</label><select id="municipioHallazgo"><option value="">Selecciona</option>
-                        <option value="Antilla">Antilla</option><option value="Holguín">Holguín</option>
-                        <option value="Gibara">Gibara</option><option value="Moa">Moa</option><option value="Banes">Banes</option>
-                    </select>
-                    <label>Teléfono *</label><input type="tel" id="telefonoHallazgo" placeholder="+53 5XXXXXXXX">
+                    <label class="required">Tipo</label><select id="tipoHallazgo"><option value="objeto">Objeto</option><option value="mascota">Mascota</option><option value="persona">Persona</option></select>
+                    <label class="required">Descripción (sin revelar todo)</label><textarea id="descHallazgo" placeholder="Color, señas..."></textarea>
+                    <label class="required">Municipio</label><select id="municipioHallazgo"><option value="">Selecciona</option><option value="Antilla">Antilla</option><option value="Báguanos">Báguanos</option><option value="Banes">Banes</option><option value="Cacocum">Cacocum</option><option value="Calixto García">Calixto García</option><option value="Cueto">Cueto</option><option value="Frank País">Frank País</option><option value="Gibara">Gibara</option><option value="Holguín">Holguín</option><option value="Mayarí">Mayarí</option><option value="Moa">Moa</option><option value="Rafael Freyre">Rafael Freyre</option><option value="Sagua de Tánamo">Sagua de Tánamo</option><option value="Urbano Noris">Urbano Noris</option></select>
+                    <label class="required">Dirección o punto de referencia donde lo encontraste</label>
+                    <input type="text" id="direccionHallazgo" placeholder="Ej: Calle Libertad #123, cerca del parque...">
+                    <label class="required">Tu teléfono de contacto</label><input type="tel" id="telefonoHallazgo" placeholder="+53 5XXXXXXXX">
                     <label>¿Esperas recompensa?</label><select id="esperaRecompensa"><option value="no">No</option><option value="si">Sí</option></select>
                 </div>
                 <button id="btnEnviarReporte" class="primary">✅ Guardar</button>
             </div>
         </div>
-
-        <!-- Coincidencias -->
-        <div id="tabMatches" style="display:none">
-            <div class="card">
-                <h3>💡 Posibles coincidencias</h3>
-                <div id="matchesList"></div>
-            </div>
-        </div>
-
-        <!-- Panel Admin -->
-        <div id="tabAdmin" style="display:none">
-            <div class="card">
-                <h3>👑 Solicitudes de Reportes Destacados</h3>
-                <div id="solicitudesList"></div>
-            </div>
-            <div class="card">
-                <h3>➕ Crear nuevo Administrador</h3>
-                <input type="text" id="nuevoAdminUser" placeholder="Nombre de usuario">
-                <button id="btnCrearAdmin" class="primary">Crear Admin</button>
-            </div>
-        </div>
+        <div id="tabMatches" style="display:none"><div class="card"><h3>💡 Posibles coincidencias</h3><div id="matchesList"></div></div></div>
+        <div id="tabAdmin" style="display:none"><div class="card"><h3>👑 Solicitudes de Reportes Destacados</h3><div id="solicitudesList"></div></div><div class="card"><h3>➕ Crear nuevo Administrador</h3><input type="text" id="nuevoAdminUser" placeholder="Nombre de usuario"><button id="btnCrearAdmin" class="primary">Crear Admin</button></div></div>
     </div>
 
     <div class="footer">
-        🐾 REGRESA HOLGUÍN • Reynier Velázquez Morales 2026
+        🐾 REGRESA HOLGUÍN • Desarrollado por Reynier Velázquez Morales 2026 • Todos los Derechos Reservados<br>
+        📍 Sistema exclusivo para la provincia Holguín, Cuba
         <br>
         <a onclick="mostrarTerminos()">📜 Términos y Condiciones</a>
     </div>
@@ -556,58 +510,33 @@
 <button id="refreshBtn" class="refresh-floating">🔄</button>
 <button id="donateBtn" class="donate-floating">❤️</button>
 
-<!-- Modal de Términos -->
-<div id="terminosModal" class="modal">
-    <div class="modal-content">
-        <h3>📜 Términos y Condiciones</h3>
-        <div class="terminos-texto">
-            <p><strong>1. Aceptación:</strong> Al usar REGRESA HOLGUÍN aceptas estos términos.</p>
-            <p><strong>2. Responsabilidad:</strong> Publica solo información verdadera. El Sistema no se hace responsable por fraudes o malos entendidos.</p>
-            <p><strong>3. Datos personales:</strong> Tu teléfono se comparte solo para coordinar devoluciones.</p>
-            <p><strong>4. Recompensas:</strong> Son acuerdo entre usuarios. El Sistema no media.</p>
-            <p><strong>5. Personas extraviadas:</strong> Solo familiares pueden reportar. No se aceptan burlas.</p>
-            <p><strong>6. Reportes destacados:</strong> Solo para objetos y mascotas. Requieren aprobación y pago.</p>
-            <p><strong>7. Moderación:</strong> El administrador puede eliminar contenido inapropiado.</p>
-            <p><strong>8. Modificaciones:</strong> Los términos pueden cambiar. El uso continuado acepta cambios.</p>
-            <p><strong>9. Ley aplicable:</strong> República de Cuba.</p>
-        </div>
-        <button id="btnCerrarTerminos" style="background:var(--primary);color:white;border:none;padding:10px;border-radius:40px;width:100%">Acepto y entiendo</button>
-    </div>
-</div>
+<div id="terminosModal" class="modal"><div class="modal-content"><h3>📜 Términos y Condiciones</h3><div class="terminos-texto"><p><strong>1. Aceptación:</strong> Al usar REGRESA HOLGUÍN aceptas estos términos.</p><p><strong>2. Responsabilidad:</strong> Publica solo información verdadera. El Sistema no se hace responsable por fraudes o malos entendidos.</p><p><strong>3. Datos personales:</strong> Tu teléfono se comparte solo para coordinar devoluciones.</p><p><strong>4. Recompensas:</strong> Son acuerdo entre usuarios. El Sistema no media.</p><p><strong>5. Personas extraviadas:</strong> Solo familiares pueden reportar. No se aceptan burlas.</p><p><strong>6. Reportes destacados:</strong> Solo para objetos y mascotas. Requieren aprobación y pago.</p><p><strong>7. Moderación:</strong> El administrador puede eliminar contenido inapropiado.</p><p><strong>8. Modificaciones:</strong> Los términos pueden cambiar. El uso continuado acepta cambios.</p><p><strong>9. Ley aplicable:</strong> República de Cuba.</p></div><button id="btnCerrarTerminos" style="background:var(--primary);color:white;border:none;padding:10px;border-radius:40px;width:100%">Acepto y entiendo</button></div></div>
 
-<!-- Modal para solicitar destacado -->
-<div id="destacadoModal" class="modal">
-    <div class="modal-content">
-        <h3>⭐ Destacar mi reporte</h3>
-        <p>Elige la duración:</p>
-        <select id="duracionDestacado" style="margin:10px 0">
-            <option value="10">10 días - 100 CUP</option>
-            <option value="20">20 días - 170 CUP</option>
-            <option value="30">30 días - 300 CUP</option>
-        </select>
-        <p style="font-size:0.8rem; color:var(--text-secondary)">Tu solicitud será revisada por un administrador. Una vez aprobada, tu reporte aparecerá destacado.</p>
-        <button id="btnConfirmarDestacado" style="background:var(--primary);color:white;border:none;padding:10px;border-radius:40px;width:100%;margin-top:10px">Solicitar destacado</button>
-        <button id="btnCancelarDestacado" style="background:var(--danger);color:white;border:none;padding:10px;border-radius:40px;width:100%;margin-top:5px">Cancelar</button>
-    </div>
-</div>
+<div id="destacadoModal" class="modal"><div class="modal-content"><h3>⭐ Destacar mi reporte</h3><p>Elige la duración:</p><select id="duracionDestacado" style="margin:10px 0"><option value="10">10 días - 100 CUP</option><option value="20">20 días - 170 CUP</option><option value="30">30 días - 300 CUP</option></select><p style="font-size:0.8rem">Tu solicitud será revisada por un administrador.</p><button id="btnConfirmarDestacado" style="background:var(--primary);color:white;border:none;padding:10px;border-radius:40px;width:100%;margin-top:10px">Solicitar destacado</button><button id="btnCancelarDestacado" style="background:var(--danger);color:white;border:none;padding:10px;border-radius:40px;width:100%;margin-top:5px">Cancelar</button></div></div>
+
+<div id="donacionModal" class="modal"><div class="modal-content"><h3>❤️ Apoyar el proyecto</h3><div class="donacion-info"><p>Tu ayuda permite mantener el sistema funcionando.</p><code id="tarjetaNumero">9204 1299 7573 6440</code><br><button id="btnCopiarTarjeta" class="btn-copiar">📋 Copiar número</button><p style="font-size:0.7rem; margin-top:8px;">Tarjeta en CUP (Moneda Nacional)</p></div><button id="btnCerrarDonacion" style="background:var(--primary);color:white;border:none;padding:10px;border-radius:40px;width:100%">Cerrar</button></div></div>
 
 <script>
-// ========== SUPABASE ==========
+// ==========================================
+// CONFIGURACIÓN ÚNICA DE SUPABASE
+// ==========================================
 const SB_URL = 'https://cpizvgfzyxsznsduinxf.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNwaXp2Z2Z6eXhzem5zZHVpbnhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NzE1MzgsImV4cCI6MjA5MzE0NzUzOH0.TpQcfNV1nqyeP7L8vL0mXQ5Uc87Qm0H1yjcQF2yviXI';
-const SupabaseApp = window.supabase.createClient(SB_URL, SB_KEY);
+const R_Client = window.supabase.createClient(SB_URL, SB_KEY);
 
 let usuario = null;
 let pestana = 'perdidas';
-let filtroP = 'todos';
-let filtroH = 'todos';
+let filtroPerdidas = 'todos';
+let filtroHallazgos = 'todos';
 let reporteParaDestacar = null;
 
 function generarId() { return Date.now() + '-' + Math.random().toString(36).substring(2, 8); }
 
-// ========== AUTENTICACIÓN ==========
+// ==========================================
+// AUTENTICACIÓN
+// ==========================================
 async function login(u, p) {
-    let { data, error } = await SupabaseApp.from('usuarios').select('*').eq('username', u).eq('password', p).single();
+    let { data, error } = await R_Client.from('usuarios').select('*').eq('username', u).eq('password', p).single();
     if (error || !data) return false;
     usuario = data;
     localStorage.setItem('app_user', JSON.stringify(usuario));
@@ -617,105 +546,85 @@ async function login(u, p) {
 }
 
 async function registrar(u, p) {
-    let { error } = await SupabaseApp.from('usuarios').insert([{ username: u, password: p, is_admin: false }]);
+    let { error } = await R_Client.from('usuarios').insert([{ username: u, password: p, is_admin: false }]);
     return !error;
 }
 
 async function crearAdmin(username) {
     if (!usuario?.is_admin) return false;
-    let { error } = await SupabaseApp.from('usuarios').insert([{ username: username, password: 'admin123', is_admin: true }]);
+    let { error } = await R_Client.from('usuarios').insert([{ username: username, password: 'admin123', is_admin: true }]);
     return !error;
 }
 
-// ========== REPORTES DESTACADOS ==========
+// ==========================================
+// REPORTES DESTACADOS
+// ==========================================
 async function solicitarDestacado(reporteId, tipo, duracion) {
     let precio = duracion == 10 ? 100 : (duracion == 20 ? 170 : 300);
-    let { error } = await SupabaseApp.from('solicitudes_destacados').insert([{
-        id: generarId(),
-        reporte_id: reporteId,
-        tipo_reporte: tipo,
-        usuario: usuario.username,
-        duracion: duracion,
-        precio: precio,
-        estado: 'pendiente',
-        fecha_solicitud: new Date().toISOString()
+    let { error } = await R_Client.from('solicitudes_destacados').insert([{
+        id: generarId(), reporte_id: reporteId, tipo_reporte: tipo, usuario: usuario.username,
+        duracion: duracion, precio: precio, estado: 'pendiente', fecha_solicitud: new Date().toISOString()
     }]);
     return !error;
 }
 
 async function getSolicitudesPendientes() {
     if (!usuario?.is_admin) return [];
-    let { data } = await SupabaseApp.from('solicitudes_destacados').select('*').eq('estado', 'pendiente').order('fecha_solicitud', { ascending: true });
+    let { data } = await R_Client.from('solicitudes_destacados').select('*').eq('estado', 'pendiente').order('fecha_solicitud', { ascending: true });
     return data || [];
 }
 
 async function aprobarSolicitud(id, reporteId, tipo, duracion) {
-    let fechaInicio = new Date().toISOString();
-    let fechaFin = new Date();
-    fechaFin.setDate(fechaFin.getDate() + duracion);
-    
-    await SupabaseApp.from('solicitudes_destacados').update({ 
-        estado: 'aprobado', 
-        fecha_inicio: fechaInicio,
-        fecha_fin: fechaFin.toISOString(),
-        aprobado_por: usuario.username
-    }).eq('id', id);
-    
-    // Marcar el reporte como destacado en la tabla correspondiente
+    let fechaFin = new Date(); fechaFin.setDate(fechaFin.getDate() + duracion);
+    await R_Client.from('solicitudes_destacados').update({ estado: 'aprobado', fecha_inicio: new Date().toISOString(), fecha_fin: fechaFin.toISOString(), aprobado_por: usuario.username }).eq('id', id);
     let tabla = tipo === 'perdida' ? 'perdidas' : 'hallazgos';
-    await SupabaseApp.from(tabla).update({ destacado_hasta: fechaFin.toISOString() }).eq('id', reporteId);
+    await R_Client.from(tabla).update({ destacado_hasta: fechaFin.toISOString() }).eq('id', reporteId);
+    renderTodo();
 }
 
 async function rechazarSolicitud(id) {
-    await SupabaseApp.from('solicitudes_destacados').update({ estado: 'rechazado' }).eq('id', id);
+    await R_Client.from('solicitudes_destacados').update({ estado: 'rechazado' }).eq('id', id);
+    renderTodo();
 }
 
-async function estaDestacado(reporte, tipo) {
+async function estaDestacado(reporte) {
     if (!reporte.destacado_hasta) return false;
-    let hoy = new Date();
-    let hasta = new Date(reporte.destacado_hasta);
-    return hasta > hoy;
+    return new Date() < new Date(reporte.destacado_hasta);
 }
 
-// ========== REPORTES ==========
-async function addPerdida(d) { 
-    let { error } = await SupabaseApp.from('perdidas').insert([d]); 
-    return !error; 
-}
-
-async function addHallazgo(d) { 
-    let { error } = await SupabaseApp.from('hallazgos').insert([d]); 
-    return !error; 
-}
+// ==========================================
+// CRUD DE REPORTES
+// ==========================================
+async function addPerdida(d) { let { error } = await R_Client.from('perdidas').insert([d]); return !error; }
+async function addHallazgo(d) { let { error } = await R_Client.from('hallazgos').insert([d]); return !error; }
 
 async function getPerdidas() {
-    let q = SupabaseApp.from('perdidas').select('*').eq('estado', 'activo');
-    if (filtroP !== 'todos') q = q.eq('municipio', filtroP);
+    let q = R_Client.from('perdidas').select('*').eq('estado', 'activo');
+    if (filtroPerdidas !== 'todos') q = q.eq('municipio', filtroPerdidas);
     let { data } = await q.order('destacado_hasta', { ascending: false, nullsLast: true }).order('fecha', { ascending: false });
     return data || [];
 }
 
 async function getHallazgos() {
-    let q = SupabaseApp.from('hallazgos').select('*').eq('estado', 'activo');
-    if (filtroH !== 'todos') q = q.eq('municipio', filtroH);
+    let q = R_Client.from('hallazgos').select('*').eq('estado', 'activo');
+    if (filtroHallazgos !== 'todos') q = q.eq('municipio', filtroHallazgos);
     let { data } = await q.order('destacado_hasta', { ascending: false, nullsLast: true }).order('fecha', { ascending: false });
     return data || [];
 }
 
-async function getMisPerdidas() { let { data } = await SupabaseApp.from('perdidas').select('*').eq('owner', usuario.username); return data || []; }
-async function getMisHallazgos() { let { data } = await SupabaseApp.from('hallazgos').select('*').eq('owner', usuario.username); return data || []; }
+async function getMisPerdidas() { let { data } = await R_Client.from('perdidas').select('*').eq('owner', usuario.username); return data || []; }
+async function getMisHallazgos() { let { data } = await R_Client.from('hallazgos').select('*').eq('owner', usuario.username); return data || []; }
 
-async function marcarPerdidaResuelta(id) { await SupabaseApp.from('perdidas').update({ estado: 'resuelto' }).eq('id', id); renderTodo(); }
-async function marcarHallazgoResuelto(id) { await SupabaseApp.from('hallazgos').update({ estado: 'resuelto' }).eq('id', id); renderTodo(); }
-async function eliminarPerdida(id) { if (confirm('¿Eliminar?')) { await SupabaseApp.from('perdidas').delete().eq('id', id); renderTodo(); } }
-async function eliminarHallazgo(id) { if (confirm('¿Eliminar?')) { await SupabaseApp.from('hallazgos').delete().eq('id', id); renderTodo(); } }
-
-async function adminEliminarPerdida(owner, id) { if (usuario?.is_admin && confirm('Eliminar reporte de ' + owner + '?')) { await SupabaseApp.from('perdidas').delete().eq('id', id); renderTodo(); alert('Eliminado'); } }
-async function adminEliminarHallazgo(owner, id) { if (usuario?.is_admin && confirm('Eliminar reporte de ' + owner + '?')) { await SupabaseApp.from('hallazgos').delete().eq('id', id); renderTodo(); alert('Eliminado'); } }
+async function marcarPerdidaResuelta(id) { await R_Client.from('perdidas').update({ estado: 'resuelto' }).eq('id', id); renderTodo(); }
+async function marcarHallazgoResuelto(id) { await R_Client.from('hallazgos').update({ estado: 'resuelto' }).eq('id', id); renderTodo(); }
+async function eliminarPerdida(id) { if (confirm('¿Eliminar?')) { await R_Client.from('perdidas').delete().eq('id', id); renderTodo(); } }
+async function eliminarHallazgo(id) { if (confirm('¿Eliminar?')) { await R_Client.from('hallazgos').delete().eq('id', id); renderTodo(); } }
+async function adminEliminarPerdida(owner, id) { if (usuario?.is_admin && confirm('Eliminar reporte de ' + owner + '?')) { await R_Client.from('perdidas').delete().eq('id', id); renderTodo(); alert('Eliminado'); } }
+async function adminEliminarHallazgo(owner, id) { if (usuario?.is_admin && confirm('Eliminar reporte de ' + owner + '?')) { await R_Client.from('hallazgos').delete().eq('id', id); renderTodo(); alert('Eliminado'); } }
 
 async function generarMatches() {
     let misPerdidas = await getMisPerdidas();
-    let todosHallazgos = await SupabaseApp.from('hallazgos').select('*').eq('estado', 'activo').then(r => r.data || []);
+    let todosHallazgos = await R_Client.from('hallazgos').select('*').eq('estado', 'activo').then(r => r.data || []);
     let matches = [];
     for (let p of misPerdidas.filter(p => p.estado === 'activo')) {
         for (let h of todosHallazgos.filter(h => h.owner !== usuario.username)) {
@@ -725,24 +634,18 @@ async function generarMatches() {
     return matches.slice(0, 15);
 }
 
-// ========== RENDER ==========
+// ==========================================
+// RENDERIZADO
+// ==========================================
 async function renderPerdidas() {
     let c = document.getElementById('perdidasList');
     let items = await getPerdidas();
     if (items.length === 0) { c.innerHTML = '<div class="empty-message">🔴 No hay pérdidas</div>'; return; }
     let html = '';
     for (let p of items) {
-        let destacado = await estaDestacado(p, 'perdida');
+        let destacado = await estaDestacado(p);
         let tipoLabel = p.tipo === 'persona' ? '🧑 Persona' : (p.tipo === 'mascota' ? '🐕 Mascota' : '📦 Objeto');
-        let destacadoClass = destacado ? 'destacado' : '';
-        html += `<div class="reporte-item ${destacadoClass}">
-                    ${destacado ? '<span class="badge badge-destacado">⭐ DESTACADO</span>' : ''}
-                    <span class="badge ${p.tipo === 'persona' ? 'badge-persona' : ''}">${tipoLabel}</span>
-                    ${p.recompensa_ofrece ? '<span class="badge badge-recompensa">🎁 Recompensa</span>' : ''}
-                    <span class="badge badge-municipio">📍 ${p.municipio}</span>
-                    <p><strong>${p.descripcion.substring(0, 120)}</strong><br>📍 ${p.lugar || p.municipio}<br>📞 ${p.telefono}</p>
-                    <div class="actions"><button onclick="alert('📞 ${p.telefono}\\n👤 ${p.owner}')">Contactar</button>${usuario?.is_admin ? `<button style="background:#ef4444;color:white;" onclick="adminEliminarPerdida('${p.owner}','${p.id}')">Admin</button>` : ''}</div>
-                </div>`;
+        html += `<div class="reporte-item ${destacado ? 'destacado' : ''}">${destacado ? '<span class="badge badge-destacado">⭐ DESTACADO</span>' : ''}<span class="badge ${p.tipo === 'persona' ? 'badge-persona' : ''}">${tipoLabel}</span>${p.recompensa_ofrece ? '<span class="badge badge-recompensa">🎁 Recompensa</span>' : ''}<span class="badge badge-municipio">📍 ${p.municipio}</span><span class="badge badge-owner">👤 ${p.owner}</span><p><strong>${p.descripcion.substring(0, 120)}</strong><br>📍 ${p.lugar || p.municipio}<br>📞 ${p.telefono}</p><div class="actions"><button onclick="alert('📞 ${p.telefono}\\n👤 ${p.owner}')">Contactar</button>${usuario?.is_admin ? `<button class="danger" onclick="adminEliminarPerdida('${p.owner}','${p.id}')">Admin</button>` : ''}</div></div>`;
     }
     c.innerHTML = html;
 }
@@ -753,17 +656,9 @@ async function renderHallazgos() {
     if (items.length === 0) { c.innerHTML = '<div class="empty-message">🟢 No hay hallazgos</div>'; return; }
     let html = '';
     for (let h of items) {
-        let destacado = await estaDestacado(h, 'hallazgo');
+        let destacado = await estaDestacado(h);
         let tipoLabel = h.tipo === 'persona' ? '🧑 Persona' : (h.tipo === 'mascota' ? '🐕 Mascota' : '🔍 Objeto');
-        let destacadoClass = destacado ? 'destacado' : '';
-        html += `<div class="reporte-item ${destacadoClass}">
-                    ${destacado ? '<span class="badge badge-destacado">⭐ DESTACADO</span>' : ''}
-                    <span class="badge ${h.tipo === 'persona' ? 'badge-persona' : ''}">${tipoLabel}</span>
-                    <span class="badge">${h.espera_recompensa === 'si' ? '💰 Espera recompensa' : '❤️ Devuelve gratis'}</span>
-                    <span class="badge badge-municipio">📍 ${h.municipio}</span>
-                    <p><strong>${h.descripcion.substring(0, 120)}</strong><br>📍 ${h.lugar || h.municipio}<br>📞 ${h.telefono}</p>
-                    <div class="actions"><button onclick="alert('📞 ${h.telefono}\\n👤 ${h.owner}')">Contactar</button>${usuario?.is_admin ? `<button style="background:#ef4444;color:white;" onclick="adminEliminarHallazgo('${h.owner}','${h.id}')">Admin</button>` : ''}</div>
-                </div>`;
+        html += `<div class="reporte-item ${destacado ? 'destacado' : ''}">${destacado ? '<span class="badge badge-destacado">⭐ DESTACADO</span>' : ''}<span class="badge ${h.tipo === 'persona' ? 'badge-persona' : ''}">${tipoLabel}</span><span class="badge">${h.espera_recompensa === 'si' ? '💰 Espera recompensa' : '❤️ Devuelve gratis'}</span><span class="badge badge-municipio">📍 ${h.municipio}</span><span class="badge badge-owner">👤 ${h.owner}</span><p><strong>${h.descripcion.substring(0, 120)}</strong><br>📍 ${h.lugar || h.municipio}<br>📞 ${h.telefono}</p><div class="actions"><button onclick="alert('📞 ${h.telefono}\\n👤 ${h.owner}')">Contactar</button>${usuario?.is_admin ? `<button class="danger" onclick="adminEliminarHallazgo('${h.owner}','${h.id}')">Admin</button>` : ''}</div></div>`;
     }
     c.innerHTML = html;
 }
@@ -777,12 +672,7 @@ async function renderMisReportes() {
         let html = '';
         for (let p of perdidas.filter(p => p.estado === 'activo')) {
             let puedeDestacar = (p.tipo !== 'persona');
-            html += `<div class="reporte-item"><p><strong>${p.descripcion}</strong><br>📍 ${p.municipio}<br>📞 ${p.telefono}</p>
-                    <div class="actions">
-                        <button onclick="marcarPerdidaResuelta('${p.id}')">✅ Resuelto</button>
-                        <button onclick="eliminarPerdida('${p.id}')" style="color:#ef4444;">🗑️</button>
-                        ${puedeDestacar ? `<button onclick="abrirModalDestacado('${p.id}', 'perdida')" style="background:#f59e0b;color:white;">⭐ Destacar</button>` : ''}
-                    </div></div>`;
+            html += `<div class="reporte-item"><p><strong>${p.descripcion}</strong><br>📍 ${p.lugar || p.municipio}<br>📞 ${p.telefono}</p><div class="actions"><button onclick="marcarPerdidaResuelta('${p.id}')">✅ Resuelto</button><button onclick="eliminarPerdida('${p.id}')" style="color:#ef4444;">🗑️</button>${puedeDestacar ? `<button onclick="abrirModalDestacado('${p.id}', 'perdida')" style="background:#f59e0b;color:white;">⭐ Destacar</button>` : ''}</div></div>`;
         }
         c1.innerHTML = html;
     }
@@ -792,12 +682,7 @@ async function renderMisReportes() {
         let html = '';
         for (let h of hallazgos.filter(h => h.estado === 'activo')) {
             let puedeDestacar = (h.tipo !== 'persona');
-            html += `<div class="reporte-item"><p><strong>${h.descripcion}</strong><br>📍 ${h.municipio}<br>📞 ${h.telefono}</p>
-                    <div class="actions">
-                        <button onclick="marcarHallazgoResuelto('${h.id}')">✅ Resuelto</button>
-                        <button onclick="eliminarHallazgo('${h.id}')" style="color:#ef4444;">🗑️</button>
-                        ${puedeDestacar ? `<button onclick="abrirModalDestacado('${h.id}', 'hallazgo')" style="background:#f59e0b;color:white;">⭐ Destacar</button>` : ''}
-                    </div></div>`;
+            html += `<div class="reporte-item"><p><strong>${h.descripcion}</strong><br>📍 ${h.lugar || h.municipio}<br>📞 ${h.telefono}</p><div class="actions"><button onclick="marcarHallazgoResuelto('${h.id}')">✅ Resuelto</button><button onclick="eliminarHallazgo('${h.id}')" style="color:#ef4444;">🗑️</button>${puedeDestacar ? `<button onclick="abrirModalDestacado('${h.id}', 'hallazgo')" style="background:#f59e0b;color:white;">⭐ Destacar</button>` : ''}</div></div>`;
         }
         c2.innerHTML = html;
     }
@@ -823,22 +708,14 @@ async function renderSolicitudes() {
     for (let s of solicitudes) {
         let reporte = null;
         if (s.tipo_reporte === 'perdida') {
-            let { data } = await SupabaseApp.from('perdidas').select('*').eq('id', s.reporte_id).single();
+            let { data } = await R_Client.from('perdidas').select('*').eq('id', s.reporte_id).single();
             reporte = data;
         } else {
-            let { data } = await SupabaseApp.from('hallazgos').select('*').eq('id', s.reporte_id).single();
+            let { data } = await R_Client.from('hallazgos').select('*').eq('id', s.reporte_id).single();
             reporte = data;
         }
         if (reporte) {
-            html += `<div class="reporte-item">
-                        <p><strong>Solicitante:</strong> ${s.usuario}</p>
-                        <p><strong>Reporte:</strong> ${reporte.descripcion.substring(0, 80)}</p>
-                        <p><strong>Duración:</strong> ${s.duracion} días | <strong>Precio:</strong> ${s.precio} CUP</p>
-                        <div class="actions">
-                            <button onclick="aprobarSolicitud('${s.id}', '${s.reporte_id}', '${s.tipo_reporte}', ${s.duracion})" style="background:#10b981;color:white;">✅ Aprobar</button>
-                            <button onclick="rechazarSolicitud('${s.id}')" style="background:#ef4444;color:white;">❌ Rechazar</button>
-                        </div>
-                    </div>`;
+            html += `<div class="reporte-item"><p><strong>Solicitante:</strong> ${s.usuario}</p><p><strong>Reporte:</strong> ${reporte.descripcion.substring(0, 80)}</p><p><strong>Duración:</strong> ${s.duracion} días | <strong>Precio:</strong> ${s.precio} CUP</p><div class="actions"><button onclick="aprobarSolicitud('${s.id}', '${s.reporte_id}', '${s.tipo_reporte}', ${s.duracion})" style="background:#10b981;color:white;">✅ Aprobar</button><button onclick="rechazarSolicitud('${s.id}')" style="background:#ef4444;color:white;">❌ Rechazar</button></div></div>`;
         }
     }
     c.innerHTML = html;
@@ -853,36 +730,9 @@ async function renderTodo() {
     else if (pestana === 'admin' && usuario?.is_admin) await renderSolicitudes();
 }
 
-// ========== MODALES ==========
-function mostrarTerminos() {
-    document.getElementById('terminosModal').style.display = 'flex';
-}
-document.getElementById('btnCerrarTerminos').onclick = () => {
-    document.getElementById('terminosModal').style.display = 'none';
-};
-
-function abrirModalDestacado(id, tipo) {
-    if (confirm('Los reportes destacados tienen costo. ¿Deseas continuar?')) {
-        reporteParaDestacar = { id, tipo };
-        document.getElementById('destacadoModal').style.display = 'flex';
-    }
-}
-document.getElementById('btnConfirmarDestacado').onclick = async () => {
-    let duracion = parseInt(document.getElementById('duracionDestacado').value);
-    if (reporteParaDestacar) {
-        await solicitarDestacado(reporteParaDestacar.id, reporteParaDestacar.tipo, duracion);
-        alert('✅ Solicitud enviada. Un administrador la revisará.');
-        document.getElementById('destacadoModal').style.display = 'none';
-        reporteParaDestacar = null;
-        renderTodo();
-    }
-};
-document.getElementById('btnCancelarDestacado').onclick = () => {
-    document.getElementById('destacadoModal').style.display = 'none';
-    reporteParaDestacar = null;
-};
-
-// ========== EVENTOS ==========
+// ==========================================
+// EVENTOS
+// ==========================================
 document.getElementById('btnLogin').onclick = async () => {
     let u = document.getElementById('loginUser').value.trim();
     let p = document.getElementById('loginPass').value;
@@ -897,15 +747,12 @@ document.getElementById('btnLogin').onclick = async () => {
 document.getElementById('btnRegister').onclick = async () => {
     let u = document.getElementById('loginUser').value.trim();
     let p = document.getElementById('loginPass').value;
-    if (await registrar(u, p)) {
-        mostrarTerminos();
-        alert('✅ Registrado. Inicia sesión');
-    } else alert('❌ Usuario ya existe');
+    if (await registrar(u, p)) { mostrarTerminos(); alert('✅ Registrado. Inicia sesión'); }
+    else alert('❌ Usuario ya existe');
 };
 
 document.getElementById('logoutBtn').onclick = () => {
-    usuario = null;
-    localStorage.removeItem('app_user');
+    usuario = null; localStorage.removeItem('app_user');
     document.getElementById('authPanel').style.display = 'block';
     document.getElementById('appMain').style.display = 'none';
 };
@@ -934,37 +781,92 @@ document.getElementById('reportType').onchange = (e) => {
 document.getElementById('recompensaSiNo').onchange = (e) => {
     document.getElementById('camposRecompensa').style.display = e.target.value === 'si' ? 'block' : 'none';
 };
+document.getElementById('aplicarFiltroPerdidas').onclick = async () => { filtroPerdidas = document.getElementById('filtroMunicipioPerdidas').value; await renderPerdidas(); };
+document.getElementById('aplicarFiltroHallazgos').onclick = async () => { filtroHallazgos = document.getElementById('filtroMunicipioHallazgos').value; await renderHallazgos(); };
+document.getElementById('refreshBtn').onclick = () => { location.reload(); };
+document.getElementById('btnCrearAdmin').onclick = async () => {
+    let nuevo = document.getElementById('nuevoAdminUser').value.trim();
+    if (!nuevo) { alert('Escribe un nombre'); return; }
+    if (await crearAdmin(nuevo)) alert('✅ Admin creado. Contraseña: admin123');
+    else alert('Error');
+};
 
 document.getElementById('btnEnviarReporte').onclick = async () => {
     let tipo = document.getElementById('reportType').value;
     if (tipo === 'perdida') {
-        let d = { id: generarId(), owner: usuario.username, tipo: document.getElementById('tipoPerdida').value, descripcion: document.getElementById('descPerdida').value, municipio: document.getElementById('municipioPerdida').value, telefono: document.getElementById('telefonoPerdida').value, recompensa_ofrece: document.getElementById('recompensaSiNo').value === 'si', recompensa_monto: document.getElementById('montoRecompensa').value, estado: 'activo', fecha: new Date().toISOString() };
+        let d = {
+            id: generarId(), owner: usuario.username, tipo: document.getElementById('tipoPerdida').value,
+            descripcion: document.getElementById('descPerdida').value, municipio: document.getElementById('municipioPerdida').value,
+            lugar: document.getElementById('direccionPerdida').value, telefono: document.getElementById('telefonoPerdida').value,
+            recompensa_ofrece: document.getElementById('recompensaSiNo').value === 'si',
+            recompensa_monto: document.getElementById('montoRecompensa').value,
+            estado: 'activo', fecha: new Date().toISOString()
+        };
         if (!d.descripcion || !d.municipio || !d.telefono) { alert('Complete datos'); return; }
         if (await addPerdida(d)) { alert('✅ Pérdida registrada'); document.querySelector('.tab[data-tab="perdidas"]').click(); }
         else alert('Error');
     } else {
-        let d = { id: generarId(), owner: usuario.username, tipo: document.getElementById('tipoHallazgo').value, descripcion: document.getElementById('descHallazgo').value, municipio: document.getElementById('municipioHallazgo').value, telefono: document.getElementById('telefonoHallazgo').value, espera_recompensa: document.getElementById('esperaRecompensa').value, estado: 'activo', fecha: new Date().toISOString() };
+        let d = {
+            id: generarId(), owner: usuario.username, tipo: document.getElementById('tipoHallazgo').value,
+            descripcion: document.getElementById('descHallazgo').value, municipio: document.getElementById('municipioHallazgo').value,
+            lugar: document.getElementById('direccionHallazgo').value, telefono: document.getElementById('telefonoHallazgo').value,
+            espera_recompensa: document.getElementById('esperaRecompensa').value,
+            estado: 'activo', fecha: new Date().toISOString()
+        };
         if (!d.descripcion || !d.municipio || !d.telefono) { alert('Complete datos'); return; }
         if (await addHallazgo(d)) { alert('✅ Hallazgo registrado'); document.querySelector('.tab[data-tab="hallazgos"]').click(); }
         else alert('Error');
     }
 };
 
-document.getElementById('aplicarFiltroPerdidas').onclick = async () => { filtroP = document.getElementById('filtroMunicipioPerdidas').value; await renderPerdidas(); };
-document.getElementById('aplicarFiltroHallazgos').onclick = async () => { filtroH = document.getElementById('filtroMunicipioHallazgos').value; await renderHallazgos(); };
-document.getElementById('refreshBtn').onclick = () => location.reload();
-document.getElementById('donateBtn').onclick = () => { navigator.clipboard.writeText('9204 1299 7573 6440'); alert('Tarjeta CUP copiada: 9204 1299 7573 6440'); };
+// Donación con botón copiar
+document.getElementById('donateBtn').onclick = () => {
+    document.getElementById('donacionModal').style.display = 'flex';
+};
+document.getElementById('btnCerrarDonacion').onclick = () => {
+    document.getElementById('donacionModal').style.display = 'none';
+};
+document.getElementById('btnCopiarTarjeta').onclick = () => {
+    let tarjeta = document.getElementById('tarjetaNumero').innerText;
+    navigator.clipboard.writeText(tarjeta);
+    alert('✅ Número de tarjeta copiado: ' + tarjeta);
+};
 
-document.getElementById('btnCrearAdmin').onclick = async () => {
-    let nuevo = document.getElementById('nuevoAdminUser').value.trim();
-    if (!nuevo) { alert('Escribe un nombre de usuario'); return; }
-    if (await crearAdmin(nuevo)) alert('✅ Admin creado. Contraseña: admin123');
-    else alert('Error o usuario ya existe');
+// Modales
+function mostrarTerminos() { document.getElementById('terminosModal').style.display = 'flex'; }
+document.getElementById('btnCerrarTerminos').onclick = () => { document.getElementById('terminosModal').style.display = 'none'; };
+
+function abrirModalDestacado(id, tipo) {
+    if (confirm('Los reportes destacados tienen costo. ¿Deseas continuar?')) {
+        reporteParaDestacar = { id, tipo };
+        document.getElementById('destacadoModal').style.display = 'flex';
+    }
+}
+document.getElementById('btnConfirmarDestacado').onclick = async () => {
+    let duracion = parseInt(document.getElementById('duracionDestacado').value);
+    if (reporteParaDestacar) {
+        await solicitarDestacado(reporteParaDestacar.id, reporteParaDestacar.tipo, duracion);
+        alert('✅ Solicitud enviada. Un administrador la revisará.');
+        document.getElementById('destacadoModal').style.display = 'none';
+        reporteParaDestacar = null;
+    }
+};
+document.getElementById('btnCancelarDestacado').onclick = () => {
+    document.getElementById('destacadoModal').style.display = 'none';
+    reporteParaDestacar = null;
 };
 
 let dark = false;
-document.getElementById('darkModeToggle').onclick = () => { dark = !dark; document.body.classList.toggle('dark', dark); localStorage.setItem('modoOscuro', dark); document.getElementById('darkModeToggle').innerHTML = dark ? '☀️' : '🌙'; };
-if (localStorage.getItem('modoOscuro') === 'true') { document.body.classList.add('dark'); document.getElementById('darkModeToggle').innerHTML = '☀️'; }
+document.getElementById('darkModeToggle').onclick = () => {
+    dark = !dark;
+    document.body.classList.toggle('dark', dark);
+    localStorage.setItem('modoOscuro', dark);
+    document.getElementById('darkModeToggle').innerHTML = dark ? '☀️' : '🌙';
+};
+if (localStorage.getItem('modoOscuro') === 'true') {
+    document.body.classList.add('dark');
+    document.getElementById('darkModeToggle').innerHTML = '☀️';
+}
 
 window.marcarPerdidaResuelta = marcarPerdidaResuelta;
 window.marcarHallazgoResuelto = marcarHallazgoResuelto;
